@@ -1,0 +1,43 @@
+.data-card {
+  border-radius: 4px;
+
+  p {
+    font-size: 14px;
+    color: rgb(73, 80, 87);
+  }
+
+  span {
+    font-size: 24px;
+    margin-right: 12px;
+  }
+
+  h3 {
+    font-size: 24px;
+    display: inline;
+  }
+
+  .data {
+    height: 100px;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .percentage {
+      position: absolute;
+
+      color: gray;
+      font-weight: bold;
+      font-size: 12px;
+    }
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 16px;
+  }
+}

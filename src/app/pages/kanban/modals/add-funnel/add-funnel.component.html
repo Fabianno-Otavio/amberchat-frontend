@@ -1,0 +1,33 @@
+<section>
+  <form nz-form [formGroup]="form" nzLayout="vertical">
+    <nz-form-item>
+      <nz-form-label nzFor="name" nzRequired>Nome</nz-form-label>
+      <nz-form-control nzErrorTip="Nome é obrigatório">
+        <input
+          nz-input
+          name="name"
+          type="text"
+          id="name"
+          formControlName="name"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="color" nzRequired>Organizações</nz-form-label>
+      <nz-form-control nzErrorTip="Organizações é obrigatório">
+        <nz-select
+          name="products"
+          nzMode="multiple"
+          id="products"
+          formControlName="organizations"
+          nzAllowClear
+          nzShowArrow
+        >
+          @for (org of data.organizations; track $index) {
+            <nz-option [nzLabel]="org.nome" [nzValue]="org.id"> </nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</section>

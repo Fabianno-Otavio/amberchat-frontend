@@ -1,0 +1,17 @@
+<div class="contact-card" (click)="openContactDetailModal()">
+  <div nz-row nzAlign="middle" nzGutter="12">
+    <div class="images-wrapper" [ngClass]="{'multiple': contact.length > 1}" nz-col nzSpan="auto">
+    @for (item of contact; track $index;) {
+      @if ($index <= 3) {
+          <img [src]="contact[0].linkImage">
+        }
+      }
+    </div>
+
+    @if(contact.length <= 1) {
+      <p nz-col nzSpan="auto">{{contact[0].disyplayName}}</p>
+    } @else {
+      <p nz-col nzSpan="auto"> Clique para ver os contatos</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,130 @@
+@if (timeDiff > 0) {
+  <section>
+    <p>
+      Faltam
+      <b>
+        {{formatFromMinutes(timeDiff)}}
+      </b>
+    </p>
+    <form nz-form [formGroup]="form" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzFor="time">Me lembrar restando:</nz-form-label>
+        <nz-form-control
+          nzErrorTip="Selecione quanto tempo antes do prazo deseja ser lembrado"
+        >
+          <nz-select
+            name="time"
+            id="time"
+            formControlName="time"
+            nzAllowClear
+            nzShowArrow
+            [nzOptions]="dateOptions"
+          >
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      @if (form.get("time")?.value === "other") {
+        <nz-form-item>
+          <nz-form-control>
+            <input
+              nz-input
+              placeholder="Tempo em minutos até a tarefa terminar"
+              name="name"
+              type="number"
+              id="name"
+              formControlName="otherTime"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      }
+
+      @if (form.get("time")?.value === "select") {
+        <nz-form-item>
+          <nz-form-control>
+            <nz-date-picker
+              [nzShowTime]="{ nzFormat: 'dd/MM/YYYY HH:mm' }"
+              nzFormat="dd/MM/YYYY HH:mm"
+              formControlName="selectedDate"
+              [nzDisabledDate]="getDisabledDateFunc()"
+            ></nz-date-picker>
+          </nz-form-control>
+          @if(form.get('selectedDate')?.value){
+
+            <small><b>{{formatFromMinutes(getTimeDiffTillTaskEnds(form.get('selectedDate')?.value))}}</b> antes do prazo terminar</small>
+          }
+        </nz-form-item>
+      }
+      <!-- <nz-form-item>
+        <nz-form-label nzFor="targetUserType" nzRequired
+          >Enviar notificação para:</nz-form-label
+        >
+
+        <nz-form-control>
+          <nz-radio-group id="targetUserType" formControlName="targetUserType">
+            <label nz-radio nzValue="W">Whatsapp</label>
+            <label nz-radio nzValue="E">Email</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item> -->
+    </form>
+
+    <button
+      nz-button
+      nzType="primary"
+      (click)="addReminder()"
+      [disabled]="form.invalid"
+    >
+      Adicionar
+    </button>
+
+    <nz-divider style="width: 100%"></nz-divider>
+    @if (reminders.length > 0) {
+      <h4>Lembretes</h4>
+      <nz-table
+        #remindersTable
+        [nzData]="reminders"
+        nzHideOnSinglePage
+        [nzWidthConfig]="['80%', '20%']"
+      >
+        <tbody>
+          @for (reminder of remindersTable.data; track $index) {
+            <tr>
+              <td>
+                {{getDateFromMinutesTillEnd(reminder.tempo || reminder.time) | date : 'dd/MM/YYYY HH:mm'}}, restando
+                <b>{{formatFromMinutes(reminder.tempo || reminder.time)}}</b>
+              </td>
+              <td>
+                <button
+                  nz-popconfirm
+                  nzPopconfirmTitle="Tem certeza que quer remover este lembrete?"
+                  (click)="$event.stopPropagation()"
+                  nzOkText="Remover"
+                  nzOkType="danger"
+                  nzPopconfirmPlacement="rightTop"
+                  nz-button
+                  nzType="text"
+                  (nzOnConfirm)="deleteReminder(reminder)"
+                  nz-tooltip
+                  nzTooltipTitle="Remover lembrete"
+                >
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </nz-table>
+    }
+  </section>
+} @else {
+  <p>O prazo para esta tarefa já terminou.</p>
+}
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="emitOk.next({reminders})"
+>
+  Ok
+</button>

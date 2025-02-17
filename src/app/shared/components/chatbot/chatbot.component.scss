@@ -1,0 +1,32 @@
+.chatbot-component {
+  height: 100%;
+  max-height: 60dvh;
+  overflow-y: auto;
+
+  background: url(../../../../../public/assets/bg_chat.png) repeat;
+  background-color: #e5ddd5e8;
+  background-blend-mode: lighten;
+
+  padding: 16px;
+
+  .message {
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+
+  .date-display {
+    margin-bottom: 8px;
+  }
+
+  ::ng-deep {
+    .ant-divider-horizontal.ant-divider-with-text {
+      color: gray;
+      font-weight: normal;
+      &::before,
+      &::after {
+        border-top: 1.5px solid rgba(128, 128, 128, 0.5);
+      }
+    }
+  }
+}

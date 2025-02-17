@@ -1,0 +1,146 @@
+<section>
+  <form nz-form [formGroup]="form" nzLayout="vertical">
+    <nz-form-item>
+      <div
+        nz-row
+        nzAlign="bottom"
+        style="width: 100%"
+        [nzGutter]="8"
+        nzJustify="space-between"
+      >
+        <div nz-col nzSpan="22">
+          <nz-form-label nzFor="product" nzRequired>Produto</nz-form-label>
+          <nz-form-control nzErrorTip="Produto é obrigatório">
+            <nz-select
+              name="product"
+              id="product"
+              formControlName="product"
+              nzShowArrow
+            >
+              @for (product of products; track $index) {
+                <nz-option
+                  [nzValue]="product.id"
+                  [nzLabel]="product.nome"
+                  nzCustomContent
+                >
+                  <nz-flex nzJustify="space-between">
+                    {{ product.nome }}
+                    <nz-flex class="funnel-select-options" [nzGap]="4">
+                      <button
+                        nz-button
+                        nzType="text"
+                        (click)="$event.stopPropagation()"
+                        nz-tooltip
+                        nzTooltipTitle="Editar produto"
+                      >
+                        <span
+                          nz-icon
+                          nzType="edit"
+                          (click)="openCreateProductModal(product)"
+                        ></span>
+                      </button>
+
+                      <button
+                        nz-popconfirm
+                        nzPopconfirmTitle="Tem certeza que quer deletar este produto?"
+                        (click)="$event.stopPropagation()"
+                        nzOkText="Deletar"
+                        nzOkType="danger"
+                        nzPopconfirmPlacement="rightTop"
+                        nz-button
+                        nzType="text"
+                        nz-tooltip
+                        nzTooltipTitle="Deletar produto"
+                        (nzOnConfirm)="deleteProduct(product)"
+                      >
+                        <span nz-icon nzType="delete"></span>
+                      </button>
+                    </nz-flex>
+                  </nz-flex>
+                </nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+        <div nz-col nzSpan="2">
+          <button
+            nz-button
+            nz-tooltip
+            nzTooltipTitle="Criar produto"
+            (click)="openCreateProductModal()"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzFor="value">Valor</nz-form-label>
+      <nz-form-control>
+        <nz-input-group nzPrefix="R$">
+          <input
+            nz-input
+            name="value"
+            type="number"
+            step="0.01"
+            placeholder="0.00"
+            id="value"
+            formControlName="value"
+            (blur)="formatToCurrency($event)"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzFor="obs">Observação</nz-form-label>
+      <nz-form-control>
+        <textarea
+          nz-input
+          name="obs"
+          type="text"
+          id="obs"
+          formControlName="obs"
+          [nzAutosize]="{ minRows: 1, maxRows: 7 }"
+        ></textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- <nz-form-item>
+      <nz-form-label nzFor="name">Desconto</nz-form-label>
+      <nz-form-control>
+        <input
+          nz-input
+          name="discount"
+          type="text"
+          id="discount"
+          formControlName="discount"
+        />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzFor="name">Acréscimo</nz-form-label>
+      <nz-form-control>
+        <input
+          nz-input
+          name="increase"
+          type="text"
+          id="increase"
+          formControlName="increase"
+        />
+      </nz-form-control>
+    </nz-form-item> -->
+  </form>
+</section>
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="emitOk.next({form: form.value, product})"
+  [disabled]="form.invalid"
+>
+  Adicionar
+</button>

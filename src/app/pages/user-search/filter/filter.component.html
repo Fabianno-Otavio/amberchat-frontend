@@ -1,0 +1,147 @@
+<section class="filter_modal">
+  <form [formGroup]="filterForm">
+    @if (filterSelects) {
+      <div nz-row nzGutter="8">
+        <div nz-col nzSpan="24">
+          <nz-form-label>Canais</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="channels" nzMode="multiple">
+              @for (item of filterSelects.channels; track $index) {
+                <nz-option
+                  [nzLabel]="item.nome_canal"
+                  [nzValue]="item.token"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <div nz-row nzGutter="8">
+        <div nz-col nzSpan="24">
+          <nz-form-label>Status do atendimento</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="status">
+              @for (item of statuses; track $index) {
+                <nz-option
+                  [nzLabel]="item.name"
+                  [nzValue]="item.code"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <div nz-row nzGutter="8">
+        <div nz-col nzSpan="24">
+          <nz-form-label>Usuários</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="users" nzMode="multiple">
+              @for (item of filterSelects.users; track $index) {
+                <nz-option
+                  [nzLabel]="item.name"
+                  [nzValue]="item.id"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <div nz-row nzGutter="8">
+        <div nz-col nzSpan="24">
+          <nz-form-label>Etiquetas/Tags</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="tags" nzMode="multiple">
+              @for (item of filterSelects.tags; track $index) {
+                <nz-option
+                  [nzLabel]="item.description"
+                  [nzValue]="item.id"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <div nz-row nzGutter="8">
+        <div nz-col nzSpan="24">
+          <nz-form-label>Setor</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="sectors" nzMode="multiple">
+              @for (item of filterSelects.sectors; track $index) {
+                <nz-option
+                  [nzLabel]="item.name"
+                  [nzValue]="item.id"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <div nz-row nzGutter="8" formGroupName="service_date_range">
+        <div nz-col nzSpan="24">
+          <nz-form-label> Atendimento </nz-form-label>
+          <nz-form-control>
+            <div nz-row nzGutter="8">
+              <div nz-col nzSpan="12">
+                <nz-date-picker
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  nzPlaceHolder="Data inicial"
+                  formControlName="initial"
+                ></nz-date-picker>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-date-picker
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  nzPlaceHolder="Data final"
+                  formControlName="final"
+                ></nz-date-picker>
+              </div>
+            </div>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <div nz-row nzGutter="8" formGroupName="register_date_range">
+        <div nz-col nzSpan="24">
+          <nz-form-label> Cadastro </nz-form-label>
+          <nz-form-control>
+            <div nz-row nzGutter="8">
+              <div nz-col nzSpan="12">
+                <nz-date-picker
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  nzPlaceHolder="Data inicial"
+                  formControlName="initial"
+                ></nz-date-picker>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-date-picker
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  nzPlaceHolder="Data final"
+                  formControlName="final"
+                ></nz-date-picker>
+              </div>
+            </div>
+          </nz-form-control>
+        </div>
+      </div>
+    }
+  </form>
+  <div class="footer" nz-row nzJustify="space-between">
+    <div nz-col nzSpan="auto">
+      <button nz-button nzType="default" (click)="handleCancel()">
+        Cancelar
+      </button>
+    </div>
+    <div nz-col nzSpan="auto">
+      <button nz-button nzType="primary" (click)="handleOk()">Filtrar</button>
+    </div>
+  </div>
+</section>

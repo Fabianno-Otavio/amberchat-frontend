@@ -1,0 +1,19 @@
+.contact-detail {
+  img {
+    height: 45px;
+    border-radius: 100px;
+  }
+
+  .numbers {
+    margin-top: 16px;
+    .number {
+      span {
+        color: #008069;
+      }
+    }
+
+    nz-divider {
+      margin: 8px 0;
+    }
+  }
+}

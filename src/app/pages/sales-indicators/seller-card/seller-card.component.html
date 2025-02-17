@@ -1,0 +1,98 @@
+<nz-card class="seller-card" [nzCover]="cardCover">
+  <div class="data-resume" nz-row nzJustify="center" nzAlign="middle">
+    <p nz-col nzSpan="auto">
+      <b>{{ seller.qtd_pedido_fechado }}</b> pedidos,
+      <b>R$ {{ seller.fat_total | number: "1.2-2" : "pt" }}</b> faturados
+    </p>
+  </div>
+  <div nz-row>
+    <div class="data-single" nz-col nzSpan="12">
+      <div nz-row nzJustify="center">
+        <span
+          nz-col
+          nzSpan="24"
+          nz-icon
+          nzType="up"
+          nzTheme="outline"
+          style="color: #3ac47d"
+        ></span>
+        <b nz-col nzSpan="auto">{{ seller.iniciada }}</b>
+      </div>
+    </div>
+    <div class="data-single" nz-col nzSpan="12">
+      <div nz-row nzJustify="center">
+        <span
+          nz-col
+          nzSpan="24"
+          nz-icon
+          nzType="down"
+          nzTheme="outline"
+          style="color: #d92550"
+        ></span>
+        <b nz-col nzSpan="auto">{{ seller.recebida }}</b>
+      </div>
+    </div>
+  </div>
+  <div nz-row>
+    <div class="data-single" nz-col nzSpan="12">
+      <div nz-row nzJustify="center">
+        <span
+          nz-col
+          nzSpan="24"
+          nz-icon
+          nzType="message"
+          nzTheme="fill"
+          style="color: #f7b924"
+        ></span>
+        <b nz-col nzSpan="auto">{{ seller.qtd_tot_msg }}</b>
+      </div>
+    </div>
+    <div class="data-single" nz-col nzSpan="12">
+      <div nz-row nzJustify="center">
+        <span
+          nz-col
+          nzSpan="24"
+          nz-icon
+          nzType="contacts"
+          nzTheme="fill"
+          style="color: #16aaff"
+        ></span>
+        <b nz-col nzSpan="auto"
+          >{{ seller.qtd_tot_contato }} / {{ seller.qtd_contato_erp }} /
+          {{ seller.qtd_contato_convertido }}</b
+        >
+      </div>
+    </div>
+  </div>
+</nz-card>
+<ng-template #cardCover>
+  <div class="card-cover" nz-row nzJustify="space-between" nzAlign="middle">
+    <div nz-col nzSpan="auto" nz-row nzGutter="12">
+      <div class="image" nz-col nzSpan="auto">
+        <img
+          alt="Vendedor"
+          [src]="seller.linkImage"
+          onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+        />
+      </div>
+      <div nz-col nzSpan="auto">
+        <h3>{{ seller.vendedor }}</h3>
+        <p>{{ seller.whatsapp }}</p>
+      </div>
+    </div>
+    <div nz-col nzSpan="auto" nz-row nzAlign="middle" nzGutter="12">
+      <nz-tag nz-col nzSpan="auto"
+        >{{ seller.taxa_de_conversao | number: "1.2-2" }}%</nz-tag
+      >
+      <button
+        nz-button
+        nzType="primary"
+        nz-col
+        nzSpan="auto"
+        (click)="openSellerDetailModal()"
+      >
+        DETALHES
+      </button>
+    </div>
+  </div>
+</ng-template>

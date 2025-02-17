@@ -1,0 +1,29 @@
+.contact-card {
+  padding: 12px 0;
+  position: relative;
+  cursor: pointer;
+
+  .images-wrapper {
+    img {
+      height: 45px;
+      border-radius: 100px;
+    }
+
+    &.multiple {
+      display: flex;
+      flex-direction: row-reverse;
+      width: 80px;
+
+      img {
+        border: 1px solid lightgray;
+        &:nth-child(2) {
+          transform: translateX(75%);
+        }
+
+        &:nth-child(3) {
+          transform: translateX(150%);
+        }
+      }
+    }
+  }
+}

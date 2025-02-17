@@ -1,0 +1,39 @@
+<nz-card class="data-card" [style.borderBottom]="'3px solid' + color">
+  <div class="data" nz-row nzJustify="space-between" nzAlign="middle">
+    <div nz-col [nzSpan]="showChart ? 12 : 24">
+      <p>{{ title }}</p>
+      <div>
+        <span
+          nz-icon
+          [nzType]="icon"
+          nzTheme="outline"
+          [style.color]="color"
+        ></span>
+        <h3>
+          {{
+            isCurrency
+              ? "R$" + (value | number: "1.2-2" : "pt")
+              : (value | number: "1.0-0" : "pt")
+          }}
+        </h3>
+      </div>
+    </div>
+    @if (showChart && percentage !== undefined) {
+      <div nz-col nzSpan="12">
+        <div class="chart-wrapper">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [dataLabels]="chartOptions.dataLabels"
+            [legend]="chartOptions.legend"
+            [colors]="chartOptions.colors"
+          ></apx-chart>
+
+          @if (percentage !== undefined) {
+            <div class="percentage">{{ percentage | number: "1.2-2" }}%</div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</nz-card>

@@ -1,0 +1,29 @@
+<section class="chatbot-component" #chatbot (scroll)="onScroll($event)">
+  @for (messageDay of messages; track $index) {
+    <div class="date-display">
+      <nz-divider
+        [nzText]="(messageDay.date | date: 'dd/MM/YYYY') || ''"
+      ></nz-divider>
+    </div>
+    @for (message of messageDay.messages; track $index) {
+      <div class="message">
+        <app-message
+          [isSentByMe]="message.isSentByMe"
+          [messageTime]="message.dhMessage"
+          [mediaData]="message?.dataMedia?.urlFile"
+          [mediaType]="message?.dataMedia?.mimetype"
+          [mediaName]="message?.dataMedia?.filename"
+          [messageStatus]="message?.statusMessage"
+          [messageType]="message?.typeMessage"
+          [senderImage]="senderImage"
+          [isReply]="message.isReply"
+          [contactData]="message.dataVcard"
+          [locationData]="message.dataLocation"
+          [isSystemMessage]="message.isSystemMessage"
+        >
+          {{ message.text || "" }}
+        </app-message>
+      </div>
+    }
+  }
+</section>

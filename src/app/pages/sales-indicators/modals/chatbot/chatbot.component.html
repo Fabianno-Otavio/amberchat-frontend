@@ -1,0 +1,10 @@
+<section class="chatbot-modal">
+  @if (messages?.data) {
+    <div class="header" nz-row nzAlign="middle" nzGutter="16">
+      <img nz-col nzSpan="auto" [src]="messages.data.json_contato.linkImage" />
+      <p nz-col nzSpan="auto">{{messages.data.json_contato.nameFromWhatsApp || messages.data.json_contato.name }}</p>
+    </div>
+    <nz-divider></nz-divider>
+    <app-chatbot [messages]="formated" [senderImage]="messages.data.json_contato.linkImage" (scrolledToTop)="onScrolledToTop()"></app-chatbot>
+  }
+</section>

@@ -1,0 +1,99 @@
+<section>
+  @if (data) {
+    <button
+      class="edit-button"
+      nz-button
+      nzType="primary"
+      (click)="toggleForm()"
+    >
+      @if (isEditing) {
+        Visualizar
+      } @else {
+        Editar
+      }
+    </button>
+  }
+  <form nz-form nzLayout="vertical" [formGroup]="form">
+    <nz-form-item>
+      <nz-form-label nzFor="name">Nome</nz-form-label>
+      <nz-form-control>
+        <input
+          nz-input
+          name="name"
+          type="text"
+          id="name"
+          formControlName="nome"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="obs">Observação</nz-form-label>
+      <nz-form-control>
+        <textarea
+          nz-input
+          name="obs"
+          type="text"
+          id="obs"
+          [nzAutosize]="{ minRows: 1, maxRows: 3 }"
+          formControlName="obs"
+        ></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="whatsapp">WhatsApp</nz-form-label>
+      <nz-form-control>
+        <input
+          nz-input
+          name="whatsapp"
+          type="text"
+          id="whatsapp"
+          formControlName="whatsapp"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="contracts">Contratos</nz-form-label>
+      <nz-form-control>
+        <nz-select
+          nzMode="multiple"
+          nzShowArrow
+          name="contracts"
+          id="contracts"
+          formControlName="contratos"
+          (nzOnSearch)="searchContract($event)"
+        >
+          @for (contract of contracts; track contract.cod_contrato) {
+            <nz-option
+              [nzValue]="contract.cod_contrato"
+              [nzLabel]="contract.loja"
+            ></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <div nz-flex nzGap="middle" nzJustify="space-between">
+      <nz-form-item>
+        <nz-form-label nzFor="whatsapp">Admin</nz-form-label>
+        <nz-form-control>
+          <nz-switch nz-input id="admin" formControlName="admin" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="whatsapp">Ativo</nz-form-label>
+        <nz-form-control>
+          <nz-switch nz-input id="active" formControlName="ativo" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </form>
+</section>
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="emitOk.next(form.value)"
+>
+  Ok
+</button>

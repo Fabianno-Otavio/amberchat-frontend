@@ -1,0 +1,80 @@
+.user-search-modal {
+  height: 100%;
+  background-color: #f8f8f8;
+
+  nz-card {
+    height: 100%;
+  }
+
+  .list-wrapper {
+    height: 100%;
+
+    .empty {
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+  }
+
+  .collapse-wrapper {
+    height: calc(100dvh - 175px);
+    overflow-y: auto;
+  }
+
+  nz-collapse {
+    margin-top: 24px;
+  }
+
+  .pagination {
+    margin-top: 16px;
+  }
+
+  .avatar {
+    width: 48px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .collapse-header {
+    p {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    span {
+      color: gray;
+    }
+  }
+
+  span[nzType="filter"],
+  span[nzType="close"] {
+    font-size: 20px;
+    cursor: pointer;
+
+    &:hover {
+      scale: 1.05;
+    }
+
+    &.disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+  }
+
+  span[nzType="close"] {
+    font-size: 16px;
+    color: #bbbbbb;
+
+    &.disabled {
+      color: rgb(206, 206, 206);
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    cursor: pointer;
+
+    &:hover {
+      scale: 1.05;
+    }
+  }
+}

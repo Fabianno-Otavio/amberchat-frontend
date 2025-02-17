@@ -1,0 +1,125 @@
+.kanban-page {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .initials-avatar {
+    margin-right: 2px;
+  }
+
+  nz-divider {
+    margin: 12px 0;
+  }
+
+  form {
+    position: absolute;
+    width: calc(100dvw - 84px);
+  }
+
+  nz-form-item {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+
+    nz-form-label {
+      ::ng-deep label {
+        height: unset;
+      }
+    }
+  }
+
+  span[nzType="delete"] {
+    color: gray;
+    cursor: pointer;
+  }
+
+  .add-task {
+    font-size: 28px;
+    color: darkcyan;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .steps {
+    width: max-content;
+    margin-top: 80px;
+    height: calc(100% - 80px);
+
+    .step {
+      height: 100%;
+
+      & > nz-card {
+        height: 100%;
+        width: 20dvw;
+        max-width: 300px;
+        min-width: 270px;
+
+        ::ng-deep .ant-card-body {
+          padding: 8px;
+        }
+
+        .step-header {
+          padding: 8px 8px 0 8px;
+        }
+
+        .step-title {
+          border-radius: 999px;
+          padding: 6px 12px;
+
+          p {
+            margin: 0;
+            font-size: 18px;
+          }
+        }
+
+        .step-cards {
+          height: 100%;
+          overflow-y: auto;
+        }
+
+        .actions-step {
+          font-size: 22px;
+          transform: rotate(90deg);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .ant-card-body {
+  height: 100%;
+}
+
+::ng-deep .ant-dropdown {
+  &.filter {
+    min-width: 280px;
+  }
+  background-color: #fff;
+  padding: 8px 16px;
+  box-shadow:
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  nz-form-item {
+    margin-bottom: 8px;
+  }
+
+  nz-form-label {
+    padding: 0 !important;
+    label {
+      height: unset;
+    }
+  }
+}
+
+::ng-deep nz-modal-container {
+  display: grid;
+  place-items: center;
+  .ant-modal {
+    top:0;
+    padding:0;
+  }
+}

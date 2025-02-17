@@ -1,0 +1,125 @@
+<section class="message-component">
+  <div
+  class="wrapper"
+    nz-row
+    [nzJustify]="isSystemMessage ? 'center' : isSentByMe ? 'end' : 'start'"
+  >
+    @if (messageType === 6) {
+      <div
+      class="figure"
+        [ngClass]="{
+          'is-reply': isReply,
+          'sent-by-me': isSentByMe && !isSystemMessage,
+        }"
+      >
+        <img
+          nz-image
+          [nzSrc]="mediaData"
+          nzPlaceholder="assets/loading.gif"
+          nzFallback="assets/img_fallback.png"
+        />
+      </div>
+    }
+    <nz-card
+      nz-col
+      nzSpan="auto"
+      [ngClass]="{
+        'is-reply': isReply,
+        'sent-by-me': isSentByMe && !isSystemMessage,
+        'system-message': isSystemMessage,
+      }"
+    >
+      <p>
+        @if (isReply) {
+          <div nz-row>
+            <small nz-col nzSpan="24">Resposta</small>
+          </div>
+          <!-- <app-message [isSentByMe]="isSentByMe" [isReply]="true"
+            ></app-message -->
+        }
+
+        @if (messageType === 1) {
+          <app-audio-player
+            [src]="mediaData"
+            [type]="mediaType"
+            [image]="senderImage"
+            [isSentByMe]="isSentByMe"
+          ></app-audio-player>
+        }
+
+        @if (messageType === 3) {
+          <img
+            nz-image
+            [nzSrc]="mediaData"
+            nzPlaceholder="assets/loading.gif"
+            nzFallback="assets/img_fallback.png"
+          />
+        }
+
+        @if (messageType === 5) {
+          <app-file
+            [src]="mediaData"
+            [fileName]="mediaName"
+            [fileType]="mediaType"
+          ></app-file>
+        }
+
+        @if (messageType === 7) {
+          <app-location [locationData]="locationData"></app-location>
+        }
+
+        @if (messageType === 8 || messageType === 9) {
+          <app-contact [contact]="contactData"></app-contact>
+        }
+
+        @if (messageType === 12) {
+          <nz-card class="lost-call">
+            <div nz-row nzGutter="8">
+              <span
+                nz-col
+                nzSpan="auto"
+                nz-icon
+                nzType="phone"
+                nzTheme="fill"
+              ></span>
+              <p nz-col nzSpan="auto">Chamada perdida</p>
+            </div>
+          </nz-card>
+        }
+
+        @if (messageType === 0) {
+          <ng-content></ng-content>
+        }
+      </p>
+      <div
+        class="message-footer"
+        nz-row
+        [nzJustify]="isSystemMessage ? 'center' : 'end'"
+        [ngClass]="{'isFigure': messageType === 6}"
+      >
+        @if (isSystemMessage) {
+          <small nz-col nzSpan="auto"
+            >({{ messageTime | date: "dd/MM/YYYY - hh:mm" }})</small
+          >
+        } @else {
+          <small nz-col nzSpan="auto">{{ messageTime | date: "hh:mm" }}</small>
+        }
+
+        @if (!isSystemMessage) {
+          <img
+            [src]="
+              messageStatus === 1
+                ? 'assets/check.svg'
+                : messageStatus === 2
+                  ? 'assets/double-check.svg'
+                  : messageStatus === 3 || messageStatus === 5
+                    ? 'assets/double-check-blue.svg'
+                    : ''
+            "
+            [width]="14"
+          />
+        }
+      </div>
+    </nz-card>
+  </div>
+</section>

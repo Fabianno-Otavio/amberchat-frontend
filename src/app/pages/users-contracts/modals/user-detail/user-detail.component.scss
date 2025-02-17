@@ -1,0 +1,17 @@
+nz-form-item {
+  display: flex;
+  flex-direction: column;
+
+  nz-form-label {
+    padding: 0 0 2px;
+    ::ng-deep label {
+      height: unset;
+    }
+  }
+}
+
+.edit-button {
+  position: absolute;
+  top: 12px;
+  right: 52px;
+}

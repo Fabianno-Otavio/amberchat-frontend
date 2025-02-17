@@ -1,0 +1,57 @@
+<div class="audio-player" [ngClass]="{'sent-by-me': isSentByMe}">
+  <div nz-row nzAlign="middle">
+    <div
+      nz-col
+      nzSpan="auto"
+      class="wrapper-photo"
+      [ngClass]="{ 'no-image': !image }"
+    >
+      <div class="photo">
+        @if (image) {
+          <img [src]="image" />
+        }
+        <span class="mic-icon" nz-icon nzType="audio" nzTheme="fill"></span>
+      </div>
+    </div>
+    <div nz-col nzSpan="auto">
+      <div nz-row nzGutter="8" nzAlign="middle">
+        <div nz-col nzSpan="auto">
+            @if (isPaused) {
+              <span
+                class="icon"
+                nz-icon
+                nzType="caret-right"
+                nzTheme="outline"
+                (click)="audio.play(); isPaused = false"
+              ></span>
+            } @else {
+              <span
+                class="icon"
+                nz-icon
+                nzType="pause"
+                nzTheme="outline"
+                (click)="audio.pause(); isPaused = true"
+              ></span>
+            }
+        </div>
+        <span nz-col nzSpan="auto">{{ currentTime | date: "mm:ss" }}</span>
+        <div nz-col nzSpan="auto">
+          <nz-progress
+            [nzPercent]="getPercentage(audioDuration, currentTime)"
+            [nzShowInfo]="false"
+            [nzSuccessPercent]="0"
+          ></nz-progress>
+        </div>
+        <span nz-col nzSpan="auto">{{ audioDuration | date: "mm:ss" }}</span>
+      </div>
+    </div>
+  </div>
+  <audio
+    crossorigin
+    #audio
+    (durationchange)="setAudioDuration($event)"
+    (timeupdate)="setCurrentTime($event)"
+  >
+    <source [src]="src" [type]="type" />
+  </audio>
+</div>

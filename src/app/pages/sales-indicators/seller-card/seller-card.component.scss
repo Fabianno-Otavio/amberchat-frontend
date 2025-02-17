@@ -1,0 +1,71 @@
+.seller-card {
+  .card-cover {
+    padding: 16px;
+    position: relative;
+
+    h3, p {
+      color: white;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url(https://app-multpel.lcmti.com.br/assets/images/dropdown-header/city1.jpg);
+      background-color: #343a40c0;
+      background-blend-mode: color;
+      background-size: cover;
+      filter: grayscale(1);
+    }
+
+    .image {
+      img {
+        height: 60px;
+        aspect-ratio: 1;
+      }
+    }
+
+    nz-tag {
+      height: 32px;
+      padding: 0 12px !important;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .data-resume {
+    height: 100px;
+
+    p {
+      font-size: 20px;
+    }
+  }
+
+  .data-single {
+    height: 70px;
+    border-top: 1px solid rgb(222, 226, 230);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-size: 20px;
+    }
+
+    b {
+      font-size: 16px;
+    }
+
+    &:last-child {
+      border-left: 1px solid rgb(222, 226, 230);
+    }
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 0;
+  }
+}

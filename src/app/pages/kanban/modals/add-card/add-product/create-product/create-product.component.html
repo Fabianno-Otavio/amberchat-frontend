@@ -1,0 +1,121 @@
+<section>
+  <form nz-form [formGroup]="form" nzLayout="vertical">
+    <nz-form-item>
+      <nz-form-label nzFor="name" nzRequired>Nome</nz-form-label>
+      <nz-form-control nzErrorTip="Nome é obrigatório">
+        <input
+          nz-input
+          name="name"
+          type="text"
+          id="name"
+          formControlName="name"
+        />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-row nzAlign="middle" [nzGutter]="8">
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="price" nzRequired>Preço</nz-form-label>
+          <nz-form-control nzErrorTip="Preço é obrigatório">
+            <nz-input-group nzPrefix="R$">
+              <input
+                nz-input
+                name="price"
+                type="number"
+                step="0.01"
+                placeholder="0.00"
+                id="price"
+                formControlName="price"
+                (blur)="formatToCurrency($event)"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- <div nz-col nzSpan="1">/</div> -->
+
+      <!-- <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzFor="uni_measure" nzRequired
+            >Unidade de medida</nz-form-label
+          >
+          <nz-form-control nzErrorTip="Unidade de medida é obrigatório">
+            <nz-select
+              name="uni_measure"
+              type="text"
+              id="uni_measure"
+              formControlName="uni_measure"
+            >
+              @for (unityGroup of data.unities; track $index) {
+                <nz-option-group [nzLabel]="unityGroup.nome">
+                  @for (unity of unityGroup.unidades; track $index) {
+                    <nz-option
+                      nzLabel="{{ unity.unidade }} ({{ unity.sigla }})"
+                      [nzValue]="unity.sigla"
+                    ></nz-option>
+                  }
+                </nz-option-group>
+              }
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div> -->
+    </nz-row>
+
+    <!-- <nz-row nzAlign="middle" [nzGutter]="8">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzFor="due_date" nzRequired>Prazo</nz-form-label>
+          <nz-form-control nzErrorTip="Prazo é obrigatório">
+            <input
+              nz-input
+              name="due_date"
+              type="number"
+              id="due_date"
+              formControlName="due_date"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzFor="uni_due_date" nzRequired
+            >Unidade de medida</nz-form-label
+          >
+          <nz-form-control nzErrorTip="Unidade de medida é obrigatório">
+            <nz-select
+              name="uni_due_date"
+              type="text"
+              id="uni_due_date"
+              formControlName="uni_due_date"
+            >
+              @for (unityGroup of data.unities; track $index) {
+                @if (unityGroup.nome === "Tempo") {
+                  @for (unity of unityGroup.unidades; track $index) {
+                    <nz-option
+                      nzLabel="{{ unity.unidade }} ({{ unity.sigla }})"
+                      [nzValue]="unity.sigla"
+                    ></nz-option>
+                  }
+                }
+              }
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </nz-row> -->
+  </form>
+</section>
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="emitOk.next(form.value)"
+  [disabled]="form.invalid"
+>
+  Ok
+</button>

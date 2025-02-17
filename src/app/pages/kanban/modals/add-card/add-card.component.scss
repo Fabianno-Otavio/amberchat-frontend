@@ -1,0 +1,145 @@
+.activities {
+  background-color: #fafefb;
+  border: 1px solid #dfdfdf;
+  padding: 8px;
+
+  nz-flex {
+    height: 100%;
+  }
+  p {
+    margin: 0;
+  }
+
+  .user {
+    p {
+      margin-left: 8px;
+    }
+  }
+
+  nz-divider {
+    margin: 8px 0;
+  }
+  ::ng-deep {
+    .ant-card-body {
+      padding: 8px;
+    }
+  }
+
+  .description {
+    nz-form-item {
+      margin: 0;
+    }
+  }
+
+  .activities-cards {
+    overflow-y: auto;
+    max-height: 50dvh;
+
+    margin-bottom: 8px;
+  }
+}
+
+.left-side {
+  max-height: 65dvh;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.select-image {
+  border-radius: 50%;
+}
+
+.finish-task-button {
+  padding: 0;
+  &:has(div) {
+    padding: 0 7px;
+  }
+  span {
+    color: green;
+  }
+  div {
+    width: 16px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid gray;
+  }
+}
+
+.reminder-button {
+  padding: 0;
+  &:has(div) {
+    padding: 0 7px;
+  }
+
+  div {
+    width: 16px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid gray;
+  }
+}
+
+.contacts-list {
+  width: 100%;
+  overflow-y: auto;
+  padding-bottom: 16px;
+
+  ::ng-deep .ant-card-body {
+    width: 300px;
+    height: 60px;
+    padding: 8px;
+
+    cursor: pointer;
+  }
+}
+
+.product-relation-list {
+  width: 100%;
+  overflow-y: auto;
+  padding-bottom: 16px;
+
+  nz-typography {
+    font-size: 16px;
+    max-width: 100%;
+    display: inline-block;
+  }
+
+  nz-divider {
+    margin: 8px 0;
+  }
+
+  ::ng-deep .ant-card-body {
+    width: 200px;
+    height: 150px;
+    padding: 8px;
+
+    cursor: pointer;
+  }
+}
+
+.full-width-label {
+  ::ng-deep label {
+    width: 100%;
+  }
+}
+
+::ng-deep .ant-tabs-nav {
+  margin: 0 !important;
+  .ant-tabs-tab {
+    padding: 0 0 8px 0;
+  }
+}
+
+.task-finished {
+  background-color: #f0f0f0;
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 1%;
+    height: 1px;
+    width: 98%;
+    background-color: #757575;
+  }
+}

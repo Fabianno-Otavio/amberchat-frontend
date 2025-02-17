@@ -1,0 +1,63 @@
+$gray-color: #999999;
+$default-photo: "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHN2ZyAgUFVCTElDICctLy9XM0MvL0RURCBTVkcgMS4xLy9FTicgICdodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQnPgo8c3ZnIHdpZHRoPSI0MDFweCIgaGVpZ2h0PSI0MDFweCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAzMTIuODA5IDAgNDAxIDQwMSIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIzMTIuODA5IDAgNDAxIDQwMSIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMS4yMjMgMCAwIDEuMjIzIC00NjcuNSAtODQzLjQ0KSI+Cgk8cmVjdCB4PSI2MDEuNDUiIHk9IjY1My4wNyIgd2lkdGg9IjQwMSIgaGVpZ2h0PSI0MDEiIGZpbGw9IiNFNEU2RTciLz4KCTxwYXRoIGQ9Im04MDIuMzggOTA4LjA4Yy04NC41MTUgMC0xNTMuNTIgNDguMTg1LTE1Ny4zOCAxMDguNjJoMzE0Ljc5Yy0zLjg3LTYwLjQ0LTcyLjktMTA4LjYyLTE1Ny40MS0xMDguNjJ6IiBmaWxsPSIjRkZGRkZGIi8+Cgk8cGF0aCBkPSJtODgxLjM3IDgxOC44NmMwIDQ2Ljc0Ni0zNS4xMDYgODQuNjQxLTc4LjQxIDg0LjY0MXMtNzguNDEtMzcuODk1LTc4LjQxLTg0LjY0MSAzNS4xMDYtODQuNjQxIDc4LjQxLTg0LjY0MWM0My4zMSAwIDc4LjQxIDM3LjkgNzguNDEgODQuNjR6IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPC9zdmc+Cg==";
+
+.audio-player {
+  min-width: 300px;
+  .wrapper-photo {
+    &.no-image {
+      background-image: url(#{$default-photo});
+    }
+    background-position: center;
+    background-size: cover;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+
+    position: relative;
+
+    .photo {
+      img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+      }
+    }
+
+    .mic-icon {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-size: 1.1rem;
+      color: $gray-color;
+      filter: drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white);
+    }
+  }
+
+
+  .icon {
+    color: $gray-color;
+    margin-left: 20px;
+    transform: translateY(1.5px);
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+
+  &.sent-by-me {
+    .mic-icon, .icon {
+      color: white !important;
+      filter: none !important;
+    }
+
+    img {
+      border: none;
+    }
+  }
+  nz-progress {
+    display: inline-block;
+    min-width: 150px;
+    max-width: 300px;
+
+    transition: all 10s linear;
+  }
+}

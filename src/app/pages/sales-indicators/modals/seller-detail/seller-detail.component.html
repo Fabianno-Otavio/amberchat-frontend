@@ -1,0 +1,227 @@
+<section class="seller-detail-modal">
+  <nz-tabset>
+    <nz-tab nzTitle="Canais">
+      <div nz-row [nzGutter]="[28, 28]">
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="INICIADAS"
+            color="#3ac47d"
+            icon="up"
+            [value]="data.seller.iniciada || 0"
+            [percentage]="data.seller.iniciada_per || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="RECEBIDAS"
+            color="#d92550"
+            icon="down"
+            [value]="data.seller.recebida || 0"
+            [percentage]="data.seller.recebida_per || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="MENSAGENS"
+            color="#f7b924"
+            icon="message"
+            [value]="data.seller.qtd_tot_msg || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="PEDIDOS"
+            color="#6c757d"
+            icon="file-ppt"
+            [value]="data.seller.qtd_pedido_fechado || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="FATURADO"
+            color="#208345"
+            icon="dollar"
+            [value]="data.seller.fat_total || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="CONTATOS"
+            color="#16aaff"
+            icon="contacts"
+            [value]="data.seller.qtd_tot_contato || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="CONTATOS ERP"
+            color="#16aaff"
+            icon="contacts"
+            [value]="data.seller.qtd_contato_erp || 0"
+            [percentage]="data.seller.qtd_contato_erp_per || 0"
+          ></app-data-card>
+        </div>
+        <div class="data-card" nz-col nzSpan="8">
+          <app-data-card
+            title="CONTATOS CONVERTIDOS"
+            color="#16aaff"
+            icon="contacts"
+            [value]="data.seller.qtd_contato_convertido || 0"
+            [percentage]="
+              (100 * data.seller.qtd_contato_convertido) /
+                data.seller.qtd_tot_contato || 0
+            "
+          ></app-data-card>
+        </div>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="Contatos">
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Procurar por..."
+          [(ngModel)]="query"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+      @if (sellerContacts.length > 0) {
+        <nz-table
+          [nzScroll]="{ x: '100%', y: '40dvh' }"
+          [nzWidthConfig]="['14%', '8%', '8%', '8%', '8%', '8%', '8%', '8%']"
+          [nzPageSize]="100"
+          [nzData]="sellerContacts"
+          nzHideOnSinglePage
+          nzTableLayout="fixed"
+        >
+          <thead>
+            <tr>
+              <th>Nome WhatsApp</th>
+              <th>Cod. ERP</th>
+              <th>Nome ERP</th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('iniciadas', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'iniciadas'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Iniciadas
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('recebidas', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'recebidas'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Recebidas
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('total_msgs', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'total_msgs'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Mensagens
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('pedidos_fechados', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'pedidos_fechados'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Pedidos
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('faturamento_total', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'faturamento_total'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Faturamento (R$)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (contact of sellerContacts; track $index) {
+              <tr>
+                <td (click)="openChatBotModal(contact)">
+                  <b>{{ contact.nome_whatsapp }}</b
+                  ><br />{{ contact.numero_contato }}
+                </td>
+                <td (click)="openChatBotModal(contact)">
+                  {{ contact.erp_codigo }}
+                </td>
+                <td
+                  (click)="openChatBotModal(contact)"
+                  [nz-tooltip]="contact.erp_nomcli"
+                  nzEllipsis
+                >
+                  {{ contact.erp_nomcli }}
+                </td>
+                <td (click)="openChatBotModal(contact)">
+                  {{ contact.iniciadas }}
+                </td>
+                <td (click)="openChatBotModal(contact)">
+                  {{ contact.recebidas }}
+                </td>
+                <td (click)="openChatBotModal(contact)">
+                  {{ contact.total_msgs }}
+                </td>
+                <td (click)="openChatBotModal(contact)">
+                  {{ contact.pedidos_fechados }}
+                </td>
+                <td (click)="openChatBotModal(contact)">
+                  {{
+                    "R$" + (contact.faturamento_total | number: "1.2-2" : "pt")
+                  }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </nz-table>
+        <div class="footer">
+          <div>{{ totalItems }} Contatos</div>
+        </div>
+        <nz-pagination
+          [nzPageIndex]="currentPage"
+          [nzTotal]="totalItems"
+          (nzPageIndexChange)="onPageChange($event)"
+          nzShowSizeChanger
+          [nzPageSize]="pageSize"
+          [nzPageSizeOptions]="[10, 25, 50, 75, 100]"
+          (nzPageSizeChange)="onPageSizeChange($event)"
+        ></nz-pagination>
+      } @else {
+        <nz-empty></nz-empty>
+      }
+    </nz-tab>
+  </nz-tabset>
+</section>

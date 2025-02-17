@@ -1,0 +1,55 @@
+.user-contract-page {
+  height: 100%;
+  nz-card {
+    height: 100%;
+  }
+
+  td {
+    color: rgb(73, 80, 87);
+    cursor: pointer;
+
+    &:not(:first-child) {
+      text-align: center;
+    }
+    img {
+      margin: 0 8px;
+      height: 40px;
+    }
+  }
+
+  th {
+    text-align: center;
+  }
+
+  tr:has(td) {
+    &:nth-child(odd) {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+  }
+
+  .table-actions {
+    span {
+      font-size: 20px;
+      cursor: pointer;
+
+      &:first-child {
+        color: blue;
+      }
+
+      &:last-child {
+        color: red;
+      }
+
+      &:hover {
+        scale: 1.1;
+      }
+    }
+  }
+
+  .active-admin-icons {
+    span {
+      font-size: 16px;
+      color: rgb(184, 184, 35);
+    }
+  }
+}

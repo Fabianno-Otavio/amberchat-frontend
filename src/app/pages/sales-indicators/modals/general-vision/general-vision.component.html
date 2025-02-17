@@ -1,0 +1,308 @@
+<section class="general-vision-modal">
+  <nz-tabset>
+    <nz-tab nzTitle="Canais">
+      <nz-table
+        #channelTable
+        [nzData]="sellers"
+        [nzScroll]="{ x: '100%', y: '45dvh' }"
+        [nzPageSize]="50"
+        nzHideOnSinglePage
+        [nzWidthConfig]="[
+          '18%',
+          '8%',
+          '8%',
+          '8%',
+          '8%',
+          '8%',
+          '8%',
+          '8%',
+          '8%',
+          '8%',
+        ]"
+      >
+        <thead>
+          <tr>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('vendedor', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'vendedor' ? null : channelSort.direction
+              "
+            >
+              Canal
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('iniciada', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'iniciada' ? null : channelSort.direction
+              "
+            >
+              Iniciadas
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('recebida', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'recebida' ? null : channelSort.direction
+              "
+            >
+              Recebidas
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('qtd_tot_msg', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'qtd_tot_msg'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Mensagens
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('qtd_tot_contato', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'qtd_tot_contato'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Contatos
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('nao_convertido', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'nao_convertido'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Não Convertidos
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="
+                onChannelSort('qtd_contato_convertido', $event)
+              "
+              [nzSortOrder]="
+                channelSort.column !== 'qtd_contato_convertido'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Convertidos
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('convertido_per', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'convertido_per'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Convertidos (%)
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('qtd_pedido_fechado', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'qtd_pedido_fechado'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Pedidos
+            </th>
+            <th
+              nzShowSort
+              (nzSortOrderChange)="onChannelSort('fat_total', $event)"
+              [nzSortOrder]="
+                channelSort.column !== 'fat_total'
+                  ? null
+                  : channelSort.direction
+              "
+            >
+              Faturamento (R$)
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (seller of channelTable.data; track $index) {
+            <tr>
+              <td nz-row>
+                <div nz-col nzSpan="auto">
+                  <img
+                    alt="Vendedor"
+                    [src]="seller.linkImage"
+                    onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                  />
+                </div>
+                <div nz-col nzSpan="auto">
+                  <b>{{ seller.vendedor }}</b
+                  ><br />{{ seller.whatsapp }}
+                </div>
+              </td>
+              <td>{{ seller.iniciada }}</td>
+              <td>{{ seller.recebida }}</td>
+              <td>{{ seller.qtd_tot_msg }}</td>
+              <td>{{ seller.qtd_tot_contato }}</td>
+              <td>
+                {{ seller.qtd_tot_contato - seller.qtd_contato_convertido }}
+              </td>
+              <td>{{ seller.qtd_contato_convertido }}</td>
+              <td>
+                {{
+                  (100 * seller.qtd_contato_convertido) /
+                    seller.qtd_tot_contato || 0 | number: "1.2-2"
+                }}%
+              </td>
+              <td>{{ seller.qtd_pedido_fechado }}</td>
+              <td>{{ seller.fat_total | number: "1.2-2" : "pt" }}</td>
+            </tr>
+          }
+        </tbody>
+      </nz-table>
+      <div class="footer">
+        <div>{{ sellers.length }} Canais</div>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="Contatos">
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Procurar por..."
+          [(ngModel)]="query"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+      @if (sellerContacts && sellerContacts.length > 0) {
+        <nz-table
+          [nzScroll]="{ x: '100%', y: '40dvh' }"
+          [nzWidthConfig]="['14%', '8%', '8%', '8%', '8%', '8%', '8%', '8%']"
+          [nzPageSize]="100"
+          [nzData]="sellerContacts"
+          nzHideOnSinglePage
+          nzTableLayout="fixed"
+        >
+          <thead>
+            <tr>
+              <th>Nome WhatsApp</th>
+              <th>Cod. ERP</th>
+              <th>Nome ERP</th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('iniciadas', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'iniciadas'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Iniciadas
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('recebidas', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'recebidas'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Recebidas
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('total_msgs', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'total_msgs'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Mensagens
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('pedidos_fechados', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'pedidos_fechados'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Pedidos
+              </th>
+              <th
+                nzShowSort
+                (nzSortOrderChange)="onSortChange('faturamento_total', $event)"
+                [nzSortOrder]="
+                  sort.column !== 'faturamento_total'
+                    ? null
+                    : sort.direction === 'asc'
+                      ? 'ascend'
+                      : 'descend'
+                "
+              >
+                Faturamento (R$)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (contact of sellerContacts; track $index) {
+              <tr>
+                <td>
+                  <b>{{ contact.nome_whatsapp }}</b
+                  ><br />{{ contact.numero_contato }}
+                </td>
+                <td>{{ contact.erp_codigo }}</td>
+                <td [nz-tooltip]="contact.erp_nomcli" nzEllipsis>
+                  {{ contact.erp_nomcli }}
+                </td>
+                <td>{{ contact.iniciadas }}</td>
+                <td>{{ contact.recebidas }}</td>
+                <td>{{ contact.total_msgs }}</td>
+                <td>{{ contact.pedidos_fechados }}</td>
+                <td>
+                  {{
+                    "R$" + (contact.faturamento_total | number: "1.2-2" : "pt")
+                  }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </nz-table>
+        <div class="footer">
+          <div>{{ totalItems }} Contatos</div>
+        </div>
+        <nz-pagination
+          [nzPageIndex]="currentPage"
+          [nzTotal]="totalItems"
+          (nzPageIndexChange)="onPageChange($event)"
+          nzShowSizeChanger
+          [nzPageSize]="pageSize"
+          [nzPageSizeOptions]="[10, 25, 50, 75, 100]"
+          (nzPageSizeChange)="onPageSizeChange($event)"
+        ></nz-pagination>
+      } @else {
+        <nz-empty></nz-empty>
+      }
+    </nz-tab>
+  </nz-tabset>
+</section>

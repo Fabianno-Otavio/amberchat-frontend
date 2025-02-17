@@ -1,0 +1,111 @@
+<section class="user-contract-page">
+  <nz-card>
+    <div nz-row nzJustify="space-between" nzAlign="middle" nzGutter="12">
+      <div nz-col nzSpan="21">
+        <form [formGroup]="form">
+          <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input
+              type="text"
+              nz-input
+              placeholder="Pesquise pelo nome do contato"
+              formControlName="query"
+            />
+          </nz-input-group>
+        </form>
+        <ng-template #suffixIconSearch>
+          @if (form.get("query")?.value !== "") {
+            <span
+              nz-icon
+              nzType="close"
+              (click)="form.get('query')?.setValue(''); getUsers()"
+            ></span>
+          }
+          <span nz-icon nzType="search" (click)="getUsers()"></span>
+        </ng-template>
+      </div>
+      <button
+        nz-col
+        nzSpan="auto"
+        nz-button
+        nzType="primary"
+        (click)="openCreateModal()"
+      >
+        Incluir Usuário
+      </button>
+    </div>
+    <nz-divider></nz-divider>
+    <div>
+      @if (!loadingTable) {
+        <nz-table
+          #channelTable
+          [nzData]="users"
+          [nzPageSize]="50"
+          nzHideOnSinglePage
+          [nzWidthConfig]="['50%', '40%', '10%']"
+        >
+          <thead>
+            <tr>
+              <th nzAlign="left">Nome</th>
+              <th nzAlign="left">Descrição</th>
+              <th nzAlign="left">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of channelTable.data; track $index) {
+              <tr>
+                <td nzAlign="left" (click)="openEditModal(user, true)">
+                  <nz-flex nzAlign="center" [nzGap]="16">
+                    <div>
+                      <b>{{ user.nome }}</b
+                      ><br />{{ user.whatsapp }}
+                    </div>
+                    <nz-flex [nzGap]="8" class="active-admin-icons">
+                      @if (user.ativo) {
+                        <nz-tag nzColor="success">Ativo</nz-tag>
+                      }
+                      @if (user.admin) {
+                        <span nz-icon nzType="crown"></span>
+                      }
+
+                    </nz-flex>
+                  </nz-flex>
+                </td>
+                <td nzAlign="left" (click)="openEditModal(user, true)">
+                  {{ user.obs }}
+                </td>
+                <td>
+                  <div
+                    class="table-actions"
+                    nz-row
+                    nzGutter="8"
+                    nzJustify="center"
+                  >
+                    <span
+                      nz-col
+                      nzSpan="auto"
+                      nz-icon
+                      nzType="edit"
+                      (click)="openEditModal(user)"
+                    ></span>
+                    <button
+                      nz-popconfirm
+                      nzPopconfirmTitle="Tem certeza que quer deletar este usuário?"
+                      nzPopconfirmPlacement="topLeft"
+                      nz-button
+                      nzType="text"
+                      (nzOnConfirm)="deleteUser(user.id)"
+                    >
+                      <span nz-icon nzType="delete"></span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </nz-table>
+      } @else {
+        <app-loading></app-loading>
+      }
+    </div>
+  </nz-card>
+</section>

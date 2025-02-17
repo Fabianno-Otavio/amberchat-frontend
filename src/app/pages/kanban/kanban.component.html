@@ -1,0 +1,522 @@
+<small style="position: absolute; top: 0; right: 4px;">Versão: 1.5</small>
+<section style="max-height: 100dvh; padding: 16px">
+  <nz-card
+    style="height: calc(100dvh - 32px); background-color: rgb(252, 252, 252)"
+  >
+    <section class="kanban-page">
+      <form nz-form [formGroup]="form">
+        <nz-flex nzAlign="end" nzJustify="space-between">
+          <div nz-row [nzGutter]="[8, 8]" style="width: 100%">
+            <div nz-col nzSpan="8">
+              <nz-form-item>
+                <nz-form-label nzFor="query" nzLabelAlign="left"
+                  >Pesquisar</nz-form-label
+                >
+                <nz-form-control>
+                  <nz-input-group [nzSuffix]="suffixIconSearch">
+                    <input
+                      nz-input
+                      name="query"
+                      id="query"
+                      formControlName="query"
+                    />
+                  </nz-input-group>
+                  <ng-template #suffixIconSearch>
+                    <span nz-icon nzType="search"></span>
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="6">
+              <nz-form-item>
+                <nz-form-label nzFor="organization" nzLabelAlign="left"
+                  >Organização</nz-form-label
+                >
+                <nz-form-control>
+                  <nz-select
+                    name="organization"
+                    id="organization"
+                    formControlName="organization"
+                    nzAllowClear
+                    nzShowArrow
+                  >
+                    @for (org of setupData?.organizations; track $index) {
+                      <nz-option
+                        [nzValue]="org.id"
+                        [nzLabel]="org.nome"
+                      ></nz-option>
+                    }
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="7">
+              <nz-form-item>
+                <nz-form-label nzFor="funnels" nzLabelAlign="left"
+                  >Funil</nz-form-label
+                >
+                <nz-flex [nzGap]="4">
+                  <nz-form-control>
+                    <nz-select
+                      name="funnels"
+                      id="funnels"
+                      formControlName="funnel"
+                      nzAllowClear
+                      nzShowArrow
+                    >
+                      @for (funnel of setupData?.funnels; track $index) {
+                        <nz-option
+                          [nzLabel]="funnel.nome"
+                          [nzValue]="funnel.id"
+                          nzCustomContent
+                        >
+                          <nz-flex
+                            style="max-height: 22px"
+                            nzJustify="space-between"
+                            nzAlign="center"
+                          >
+                            {{ funnel.nome }}
+                            <nz-flex class="funnel-select-options" [nzGap]="4">
+                              <button
+                                nz-button
+                                nzType="text"
+                                (click)="
+                                  $event.stopPropagation();
+                                  openAddFunnelModal(funnel)
+                                "
+                              >
+                                <span
+                                  nz-icon
+                                  nzType="edit"
+                                  nz-tooltip
+                                  nzTooltipTitle="Editar funil"
+                                ></span>
+                              </button>
+
+                              <button
+                                nz-popconfirm
+                                nzPopconfirmTitle="Tem certeza que quer deletar este funil?"
+                                (click)="$event.stopPropagation()"
+                                (nzOnConfirm)="deleteFunnel(funnel.id)"
+                                nzOkText="Deletar"
+                                nzOkType="danger"
+                                nzPopconfirmPlacement="rightTop"
+                                nz-button
+                                nzType="text"
+                                nz-tooltip
+                                nzTooltipTitle="Deletar funil"
+                              >
+                                <span nz-icon nzType="delete"></span>
+                              </button>
+                            </nz-flex>
+                          </nz-flex>
+                        </nz-option>
+                      }
+                    </nz-select>
+                  </nz-form-control>
+                  <button
+                    nz-button
+                    nzType="primary"
+                    (click)="openAddFunnelModal()"
+                    nz-tooltip
+                    nzTooltipTitle="Criar funil"
+                  >
+                    +
+                  </button>
+                </nz-flex>
+              </nz-form-item>
+            </div>
+          </div>
+          <div>
+            <button
+              nz-button
+              nzType="primary"
+              nz-dropdown
+              [nzDropdownMenu]="menu"
+              nzPlacement="bottomLeft"
+              nzTrigger="click"
+              nzOverlayClassName="filter"
+              nz-tooltip
+              nzTooltipTitle="Mais filtros"
+            >
+              +
+              <span nz-icon nzType="filter"></span>
+            </button>
+
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <!-- <nz-form-item>
+                <nz-form-label nzFor="statuses" nzLabelAlign="left" nzSpan="24"
+                  >Status</nz-form-label
+                >
+                <nz-form-control>
+                  <nz-select
+                    name="statuses"
+                    id="statuses"
+                    formControlName="statuses"
+                    nzAllowClear
+                    nzShowArrow
+                  >
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item> -->
+              <nz-form-item>
+                <nz-form-label nzFor="responsibles" nzSpan="24"
+                  >Responsáveis</nz-form-label
+                >
+                <nz-form-control>
+                  <nz-select
+                    name="responsibles"
+                    nzMode="tags"
+                    id="responsibles"
+                    formControlName="responsibles"
+                    nzAllowClear
+                    nzShowArrow
+                  >
+                    @for (user of setupData?.users; track $index) {
+                      <nz-option
+                        [nzLabel]="user.nome"
+                        [nzValue]="user.id"
+                        nzCustomContent
+                      >
+                        <nz-flex [nzGap]="8" nzAlign="center">
+                          @if (user.url_img !== "") {
+                            <img
+                              class="select-image"
+                              [src]="user?.url_img"
+                              width="40"
+                              onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                            />
+                          } @else {
+                            <div class="initials-avatar">
+                              {{ getFirstLetters(user.nome) }}
+                            </div>
+                          }
+                          <div>
+                            {{ user.nome }}
+                          </div>
+                        </nz-flex>
+                      </nz-option>
+                    }
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label nzFor="tags" nzLabelAlign="left" nzSpan="24"
+                  >Tags</nz-form-label
+                >
+                <nz-form-control>
+                  <nz-select
+                    name="tags"
+                    id="tags"
+                    formControlName="tags"
+                    nzMode="multiple"
+                    nzAllowClear
+                    nzShowArrow
+                  >
+                    @for (tag of setupData?.tags; track $index) {
+                      <nz-option
+                        [nzLabel]="tag.nome"
+                        [nzValue]="tag.id"
+                        nzCustomContent
+                      >
+                        <nz-tag [nzColor]="tag.rgb">{{ tag.nome }}</nz-tag>
+                      </nz-option>
+                    }
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-dropdown-menu>
+          </div>
+        </nz-flex>
+      </form>
+      @if (steps) {
+        @if (form.get("funnel")?.value) {
+          <div
+            class="steps"
+            nz-row
+            nzGutter="16"
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+            [cdkDropListData]="steps"
+            (cdkDropListDropped)="drop($event); onStepDrop($event)"
+          >
+            @for (step of steps; track $index) {
+              <div
+                class="step"
+                nz-col
+                nzSpan="auto"
+                cdkDrag
+                (cdkDragDropped)="movingStep = step"
+              >
+                <nz-card>
+                  <nz-flex
+                    style="height: 100%"
+                    nzVertical
+                    nzJustify="space-between"
+                  >
+                    <div class="step-header">
+                      <div
+                        nz-row
+                        nzAlign="middle"
+                        nzJustify="space-between"
+                        [nzGutter]="8"
+                      >
+                        <div nz-col nzSpan="19">
+                          <nz-flex nzVertical>
+                            <nz-tag
+                              class="step-title"
+                              [nzColor]="step.rgb || '#039BE5'"
+                            >
+                              <p
+                                [style.color]="getContrast(step.rgb)"
+                                [nz-tooltip]="step.nome"
+                              >
+                                <span
+                                  >{{ step.nome | nzEllipsis: 14 : "..." }}
+                                </span>
+                                <small>({{ numberOfCardsShown(step.list_cards) }})</small>
+                              </p>
+                            </nz-tag>
+                            <small style="margin-left: 12px">
+                              <b>Total:</b> R${{
+                                getStepValueSum(step) | number: "1.2-2" : "pt"
+                              }}
+                            </small>
+                          </nz-flex>
+                        </div>
+
+                        <div nz-col nzSpan="5">
+                          <nz-flex [nzGap]="8">
+                            <span
+                              class="actions-step"
+                              nz-icon
+                              nzType="ellipsis"
+                              nz-dropdown
+                              [nzDropdownMenu]="stepActionsMenu"
+                              nzPlacement="bottomRight"
+                              nzTrigger="click"
+                              nzOverlayClassName="actions-step"
+                              nz-tooltip
+                              nzTooltipTitle="Opções"
+                            >
+                            </span>
+
+                            <nz-dropdown-menu #stepActionsMenu>
+                              <div nz-menu-item>
+                                <nz-row
+                                  nzJustify="space-between"
+                                  nz-popconfirm
+                                  nzPopconfirmTitle="Tem certeza que quer deletar esta etapa?"
+                                  nzOkType="danger"
+                                  (nzOnConfirm)="deleteStep(step)"
+                                >
+                                  <div>
+                                    <span
+                                      nz-icon
+                                      nzType="delete"
+                                      style="margin-right: 8px; color: red"
+                                    ></span>
+                                    Deletar
+                                  </div>
+                                </nz-row>
+                              </div>
+
+                              <div nz-menu-item>
+                                <nz-row
+                                  nzJustify="space-between"
+                                  (click)="openStepModal(step)"
+                                >
+                                  <div>
+                                    <span
+                                      nz-icon
+                                      nzType="edit"
+                                      style="margin-right: 8px"
+                                    ></span>
+                                    Editar
+                                  </div>
+                                </nz-row>
+                              </div>
+                            </nz-dropdown-menu>
+                            <span
+                              style="cursor: grab"
+                              nz-icon
+                              nzType="menu"
+                              cdkDragHandle
+                              nz-tooltip
+                              nzTooltipTitle="Arrastar etapa"
+                            ></span>
+                          </nz-flex>
+                        </div>
+                      </div>
+                    </div>
+                    <nz-divider></nz-divider>
+                    <div
+                      class="step-cards"
+                      nz-col
+                      nzSpan="auto"
+                      cdkDropList
+                      [id]="step.id.toString()"
+                      [cdkDropListData]="step.list_cards"
+                      [cdkDropListConnectedTo]="stepIdList"
+                      (change)="refreshStepIdList()"
+                    >
+                      <div nz-flex nzVertical nzJustify="space-between">
+                        <div nz-flex nzVertical nzGap="small">
+                          @for (card of step.list_cards; track $index) {
+                            @if (showCard(card)) {
+                              <div
+                                class="flex-item"
+                                (click)="openCardModal(step, 'bottom', card)"
+                              >
+                                <nz-card
+                                  cdkDrag
+                                  (cdkDragDropped)="
+                                    movingCard = card;
+                                    dropCard($event, card);
+                                    onCardDrop($event)
+                                  "
+                                  style="
+                                    cursor: grab;
+                                    border-radius: 0;
+                                    border-left: 3px solid;
+                                  "
+                                >
+                                  <nz-row nzJustify="space-between">
+                                    <nz-flex nzVertical>
+                                      {{ card.nome }}
+                                      <small
+                                        >R${{
+                                          card.prod_value || 0
+                                            | number: "1.2-2" : "pt"
+                                        }}</small
+                                      >
+                                    </nz-flex>
+                                    <span
+                                      nz-popconfirm
+                                      nzPopconfirmTitle="Tem certeza que quer deletar este cartão?"
+                                      nzOkType="danger"
+                                      nz-icon
+                                      nzType="delete"
+                                      (click)="$event.stopPropagation()"
+                                      (nzOnConfirm)="deleteCard(step, card)"
+                                    ></span>
+                                  </nz-row>
+                                  <nz-progress
+                                    [nzPercent]="
+                                      (card.tasks_done / card.tasks_total ||
+                                        0) * 100 | number: '1.0-0'
+                                    "
+                                    [nzSuccessPercent]="0"
+                                  ></nz-progress>
+                                  <nz-row [nzGutter]="[4, 4]">
+                                    @for (
+                                      tag of card.list_tag_complete;
+                                      track $index
+                                    ) {
+                                      <div nz-col nzSpan="auto">
+                                        <nz-tag [nzColor]="tag.rgb">{{
+                                          tag.nome
+                                        }}</nz-tag>
+                                      </div>
+                                    }
+                                  </nz-row>
+                                  @if (card.list_responsaveis) {
+                                    <nz-divider></nz-divider>
+                                  }
+                                  <div nz-row nzGutter="4">
+                                    @for (
+                                      responsible of card.list_responsaveis;
+                                      track $index
+                                    ) {
+                                      <div
+                                        style="width: 20px; height: 20px"
+                                        nz-tooltip
+                                        [nzTooltipTitle]="
+                                          getUser(responsible)?.nome
+                                        "
+                                      >
+                                        @if (
+                                          getUser(responsible)?.url_img !== ""
+                                        ) {
+                                          <img
+                                            class="select-image avatar small"
+                                            [src]="
+                                              getUser(responsible)?.url_img
+                                            "
+                                            width="20"
+                                            onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                                          />
+                                        } @else {
+                                          <div class="initials-avatar small">
+                                            {{
+                                              getFirstLetters(
+                                                getUser(responsible)?.nome
+                                              )
+                                            }}
+                                          </div>
+                                        }
+                                      </div>
+                                    }
+                                  </div>
+                                </nz-card>
+                              </div>
+                            }
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    <nz-divider></nz-divider>
+                    <nz-row nzAlign="middle" nzJustify="space-between">
+                      <nz-row
+                        nzAlign="middle"
+                        nzGutter="8"
+                        (click)="openCardModal(step)"
+                      >
+                        <span
+                          nz-col
+                          nzSpan="auto"
+                          class="add-icon"
+                          nz-icon
+                          nzType="plus-circle"
+                          nzTheme="outline"
+                        ></span>
+                        <a nz-col nzSpan="auto">Adicionar cartão</a>
+                      </nz-row>
+                      <p style="margin: 0">
+                        {{ step.list_cards.length }} cartões
+                      </p>
+                    </nz-row>
+                  </nz-flex>
+                </nz-card>
+              </div>
+            }
+
+            <div nz-col nzSpan="auto">
+              <nz-card style="width: 20dvw; max-width: 300px; min-width: 250px">
+                <div>
+                  <div nz-row nzAlign="middle" nzGutter="8">
+                    <span
+                      nz-icon
+                      nzType="plus-circle"
+                      nzTheme="outline"
+                      style="cursor: pointer; color: cadetblue; font-size: 22px"
+                      (click)="openStepModal()"
+                    ></span>
+                    <div nz-col nzSpan="auto">
+                      <p style="margin: 0; font-size: 18px">Nova Etapa</p>
+                    </div>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+          </div>
+        } @else {
+          <div style="margin-top: 80px">Nenhum funil selecionado.</div>
+        }
+      } @else {
+        <app-loading></app-loading>
+      }
+    </section>
+  </nz-card>
+</section>

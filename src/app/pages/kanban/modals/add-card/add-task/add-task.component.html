@@ -1,0 +1,98 @@
+<form nz-form [formGroup]="form" nzLayout="vertical">
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="name">Nome</nz-form-label>
+    <nz-form-control nzErrorTip="Nome é obrigatório">
+      <input
+        nz-input
+        name="name"
+        type="text"
+        id="name"
+        formControlName="name"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-row nzAlign="bottom">
+    <nz-form-item nz-col nzSpan="auto">
+      <nz-form-label nzRequired nzFor="responsibles">Prazo</nz-form-label>
+      <nz-form-control nzErrorTip="Prazo é obrigatório">
+        <nz-date-picker
+          [nzShowTime]="{ nzFormat: 'dd/MM/YYYY HH:mm' }"
+          nzFormat="dd/MM/YYYY HH:mm"
+          formControlName="time"
+        ></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-col nzSpan="auto">
+      <nz-form-control>
+        <nz-flex [nzGap]="8">
+          <p>Data marcada</p>
+          <nz-switch formControlName="isDeadline"></nz-switch>
+          <p>Data limite</p>
+        </nz-flex>
+      </nz-form-control>
+    </nz-form-item>
+  </nz-row>
+
+  <nz-form-item>
+    <nz-form-label nzFor="description">Descrição</nz-form-label>
+    <nz-form-control>
+      <nz-textarea-count [nzMaxCharacterCount]="100">
+        <textarea
+          id="description"
+          rows="4"
+          nz-input
+          formControlName="description"
+        ></textarea>
+      </nz-textarea-count>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="responsibles">Responsáveis</nz-form-label>
+    <nz-form-control
+      nzErrorTip="É obrigatório selecionar pelo menos um responsável"
+    >
+      <nz-select
+        name="responsibles"
+        nzMode="tags"
+        id="responsibles"
+        formControlName="responsibles"
+        nzAllowClear
+        nzShowArrow
+      >
+        @for (user of data.users; track $index) {
+          <nz-option [nzLabel]="user.nome" [nzValue]="user.id" nzCustomContent>
+            <nz-flex [nzGap]="8" nzAlign="center">
+              <img
+                class="select-image"
+                [src]="user?.url_img"
+                width="40"
+                onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+              />
+              <div>
+                {{ user.nome }}
+              </div>
+            </nz-flex>
+          </nz-option>
+        }
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- <nz-form-item nz-col nzSpan="auto">
+    <nz-form-control>
+      <label nz-checkbox formControlName="sendMessage">Enviar mensagem</label>
+    </nz-form-control>
+  </nz-form-item> -->
+</form>
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="emitOk.next(form.value)"
+  [disabled]="form.invalid"
+>
+  Ok
+</button>

@@ -1,0 +1,43 @@
+<div
+  class="file"
+  nz-row
+  nzAlign="middle"
+  nzJustify="space-between"
+  nzGutter="8"
+>
+  <div nz-col nzSpan="18">
+    <div nz-row nzAlign="top" nzGutter="16">
+      <span
+        nz-col
+        nzSpan="auto"
+        class="file-icon"
+        nz-icon
+        nzType="file"
+        nzTheme="fill"
+      ></span>
+
+      <div nz-col nzSpan="18">
+        <div nz-row nzAlign="middle" nzJustify="space-between">
+          <div nz-col nzSpan="20" [nz-tooltip]="fileName">
+            <h5 nz-typography nzEllipsis>
+              {{ fileName }}
+            </h5>
+          </div>
+          <div nz-col nzSpan="24">
+            {{ fileType }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span
+    class="download-icon"
+    nz-col
+    nzSpan="auto"
+    nz-icon
+    nzType="download"
+    nzTheme="outline"
+    (click)="downloadFile()"
+  >
+  </span>
+</div>

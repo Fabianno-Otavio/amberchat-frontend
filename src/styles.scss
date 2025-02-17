@@ -1,0 +1,34 @@
+/* You can add global styles to this file, and also import other style files */
+@import "ng-zorro-antd/ng-zorro-antd.min.css";
+
+body, html {
+  height: 100dvh;
+}
+
+p {
+  margin: 0 !important;
+}
+
+.initials-avatar {
+  width: 40px;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+  border: 1px solid gray;
+  background-color: lightgray;
+  display: grid;
+  place-content: center;
+
+  &.small {
+    width: 20px;
+    font-size: 10px;
+  }
+}
+
+.avatar {
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+}

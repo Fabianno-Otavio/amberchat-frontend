@@ -1,0 +1,68 @@
+@if(form) {
+
+
+<section>
+  <form nz-form [formGroup]="form" nzLayout="vertical">
+    <nz-form-item>
+      <div
+        nz-row
+        nzAlign="bottom"
+        style="width: 100%"
+        [nzGutter]="8"
+        nzJustify="space-between"
+      >
+        <!-- <nz-form-label nzRequired nzFor="contacts" nzRequired
+          >Contatos</nz-form-label
+        > -->
+        <nz-form-control>
+          <nz-select
+            name="contacts"
+            id="contacts"
+            formControlName="contacts"
+            nzMode="multiple"
+            nzShowArrow
+            (nzOnSearch)="getContacts($event)"
+          >
+            @for (contact of contacts; track $index) {
+              <nz-option
+                [nzValue]="contact.id"
+                [nzLabel]="getDisplayName(contact)"
+                nzCustomContent
+              >
+                <nz-flex [nzGap]="8" nzAlign="center">
+                  <img
+                    class="select-image"
+                    [src]="contact.linkImage"
+                    width="40"
+                    onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                  />
+                  <nz-flex nzVertical>
+                    <div [nz-tooltip]="getDisplayName(contact)">
+                      {{ getDisplayName(contact) | nzEllipsis: 25 : "..." }}
+                    </div>
+                    <div>
+                      {{ formatPhoneNumber(contact.number) }}
+                    </div>
+                  </nz-flex>
+                </nz-flex>
+              </nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+  </form>
+</section>
+} @else {
+  <app-loading></app-loading>
+}
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="emitOk.next({form: form.value, selectedContacts})"
+  [disabled]="form ? form.invalid : true"
+>
+  Adicionar
+</button>

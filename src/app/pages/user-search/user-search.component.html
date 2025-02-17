@@ -1,0 +1,207 @@
+<section class="user-search-modal">
+  <nz-card>
+    <div nz-row nzJustify="space-between" nzAlign="middle" nzGutter="12">
+      <div nz-col nzSpan="23">
+        <form [formGroup]="form">
+          <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input
+              type="text"
+              nz-input
+              placeholder="Pesquise pelo nome do contato"
+              formControlName="query"
+            />
+          </nz-input-group>
+        </form>
+        <ng-template #suffixIconSearch>
+          @if (form.get("query")?.value !== "") {
+            <span
+              nz-icon
+              nzType="close"
+              (click)="form.get('query')?.setValue(''); getUsers()"
+            ></span>
+          }
+          <span nz-icon nzType="search" (click)="getUsers()"></span>
+        </ng-template>
+      </div>
+      <span
+        nz-icon
+        nzType="filter"
+        nz-col
+        nzSpan="1"
+        nz-dropdown
+        [nzDropdownMenu]="menu"
+        nzTrigger="click"
+        [(nzVisible)]="dropdownOpen"
+        [ngClass]="loading ? 'disabled' : ''"
+      ></span>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <app-filter
+          (onOk)="onFilter($event)"
+          (onCancel)="onFilterCancel($event)"
+          [filterSelects]="filterSelects"
+        ></app-filter>
+      </nz-dropdown-menu>
+    </div>
+
+    <div class="list-wrapper">
+      @if (users) {
+        <div class="pagination" nz-row nzJustify="end"></div>
+        <nz-collapse nzExpandIconPosition="end" class="collapse-wrapper">
+          @for (item of users; track item.id) {
+            @if (item.json_contato) {
+              <nz-collapse-panel [nzHeader]="header">
+                <ng-template #header>
+                  <div nz-row nzJustify="space-between" nzAlign="middle">
+                    <div nz-col nzSpan="16">
+                      <div
+                        nz-row
+                        nzGutter="12"
+                        nzAlign="middle"
+                        class="collapse-header"
+                      >
+                        <div nz-col nzSpan="auto">
+                          <img
+                            [src]="item.json_contato.linkImage"
+                            onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                            class="avatar"
+                          />
+                        </div>
+
+                        <div nz-col nzSpan="8">
+                          <p>{{ item.displayName || "" }}</p>
+                          <span>{{ item.number }}</span>
+                        </div>
+
+                        @if (item.json_contato) {
+                          <div nz-col nzSpan="10" nz-row>
+                            @for (
+                              item of item.json_contato.tags;
+                              track $index
+                            ) {
+                              <nz-tag
+                                [nzColor]="item.HexColor"
+                                nz-col
+                                nzSpan="auto"
+                                >{{ item.Description }}</nz-tag
+                              >
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    <div
+                      nz-col
+                      nzSpan="auto"
+                      nz-row
+                      nzJustify="space-between"
+                      nzAlign="middle"
+                      nzGutter="16"
+                    >
+                      @if (item.isOnAtendimento) {
+                        <div>
+                          <nz-tag nzColor="#FFA500">
+                            <span nz-icon nzType="alert"></span>
+                            Em atendimento
+                          </nz-tag>
+                        </div>
+                      }
+                      <div nz-col nzSpan="auto">
+                        <button nz-button nzType="primary" (click)="openNewServiceModal($event, item.json_contato.id)">
+                          <span nz-icon nzType="plus"></span>
+                          Novo atendimento
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <div>
+                  <p>
+                    @if (item?.json_atendimento) {
+                      Contato em atendimento em
+                      @if (item.json_atendimento.length > 0) {
+                        <b>{{ item.json_atendimento.length }} </b>
+                        @if (item.json_atendimento.length === 1) {
+                          canal
+                        } @else {
+                          canais
+                        }
+                      } @else {
+                        O contato não está em atendimento
+                      }
+                    } @else {
+                      O contato não está em atendimento
+                    }
+                  </p>
+                  @if (item.json_atendimento) {
+                    <nz-table [nzData]="['']" nzHideOnSinglePage>
+                      <thead>
+                        <tr>
+                          <th>Empresa</th>
+                          <th>Canal</th>
+                          <th>Setor</th>
+                          <th>Atendente</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (prop of item.json_atendimento; track $index) {
+                          <tr>
+                            <td>{{ prop.currentOrganization.description }}</td>
+                            <td>{{ prop.channel.description }}</td>
+                            <td>
+                              {{ prop?.currentSector?.description || "-" }}
+                            </td>
+                            <td>{{ prop?.currentUser?.name || "-" }}</td>
+                            <td>
+                              @switch (prop.status) {
+                                @case (0) {
+                                  Automático
+                                }
+                                @case (1) {
+                                  Aguardando
+                                }
+                                @case (2) {
+                                  Manual
+                                }
+                                @case (5) {
+                                  Fora de hora
+                                }
+                              }
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </nz-table>
+                  }
+                </div>
+              </nz-collapse-panel>
+            }
+          }
+        </nz-collapse>
+        <div class="pagination" nz-row nzJustify="end">
+          <nz-pagination
+            [nzPageIndex]="currentPage"
+            [nzTotal]="totalItems"
+            [nzPageSize]="pageSize"
+            nzShowSizeChanger
+            (nzPageIndexChange)="onPageChange($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzShowTotal]="totalTemplate"
+            nzHideOnSinglePage
+          ></nz-pagination>
+          <ng-template #totalTemplate let-total
+            >Total de <b>{{ total }}</b> contatos</ng-template
+          >
+        </div>
+      } @else if (!loading) {
+        <div class="empty">
+          <nz-empty></nz-empty>
+        </div>
+      }
+    </div>
+    @if (loading) {
+      <app-loading></app-loading>
+    }
+  </nz-card>
+</section>

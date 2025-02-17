@@ -1,0 +1,35 @@
+<section>
+  <form [formGroup]="form">
+    @if (this.filterSelects) {
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-form-label nzRequired>Canal</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="channel">
+              @for (item of filterSelects.channels; track $index) {
+                <nz-option
+                  [nzLabel]="item.nome_canal"
+                  [nzValue]="item"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+
+        <div nz-col nzSpan="24">
+          <nz-form-label nzRequired>Setor</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="sector">
+              @for (item of sectors; track $index) {
+                <nz-option
+                  [nzLabel]="item.name"
+                  [nzValue]="item.id"
+                ></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+    }
+  </form>
+</section>

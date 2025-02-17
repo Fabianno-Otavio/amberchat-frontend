@@ -1,0 +1,267 @@
+<section class="sales-indicator-page">
+  <div class="header" nz-row nzAlign="middle" nzJustify="space-between">
+    <div nzSpan="auto">
+      <div nz-row nzAlign="middle">
+        <div class="icon-wrapper" nz-col nzSpan="auto">
+          <span nz-icon nzType="pie-chart" nzTheme="outline"></span>
+        </div>
+        <div nz-col nzSpan="auto">
+          <h2>Vendedores x WhatsApp</h2>
+          <p>Indicadores de Vendas x WhatsApp</p>
+        </div>
+      </div>
+    </div>
+    @if (salesIndicators && salesIndicators.isadmin) {
+      <div nz-col nzSpan="auto">
+        <button nz-button nzType="primary" (click)="openAdminModal()">
+          <span nz-icon nzType="lock" nzTheme="outline"></span> Permissões
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (salesIndicators !== undefined) {
+    <main>
+      <div nz-row [nzGutter]="[28, 28]">
+        <div nz-col nzSpan="8">
+          <div nz-row [nzGutter]="[28, 28]">
+            <div
+              class="data-card"
+              nz-col
+              nzSpan="12"
+              (click)="openGeneralVisionModal()"
+            >
+              <app-data-card
+                title="INICIADAS"
+                color="#3ac47d"
+                icon="up"
+                [value]="salesIndicators.totais.total_iniciada || 0"
+                [percentage]="salesIndicators.totais.total_iniciada_per || 0"
+              ></app-data-card>
+            </div>
+            <div
+              class="data-card"
+              nz-col
+              nzSpan="12"
+              (click)="openGeneralVisionModal()"
+            >
+              <app-data-card
+                title="RECEBIDAS"
+                color="#d92550"
+                icon="down"
+                [value]="salesIndicators.totais.total_recebida || 0"
+                [percentage]="salesIndicators.totais.total_recebida_per || 0"
+              ></app-data-card>
+            </div>
+          </div>
+        </div>
+        <div nz-col nzSpan="8">
+          <div nz-row [nzGutter]="[28, 28]">
+            <div
+              class="data-card"
+              nz-col
+              nzSpan="12"
+              (click)="openGeneralVisionModal()"
+            >
+              <app-data-card
+                title="MENSAGENS"
+                color="#f7b924"
+                icon="message"
+                [value]="salesIndicators.totais.total_msg || 0"
+              ></app-data-card>
+            </div>
+            <div
+              class="data-card"
+              nz-col
+              nzSpan="12"
+              (click)="openGeneralVisionModal()"
+            >
+              <app-data-card
+                title="PEDIDOS"
+                color="#6c757d"
+                icon="file-ppt"
+                [value]="salesIndicators.totais.total_qtd_pedido_fechado || 0"
+              ></app-data-card>
+            </div>
+          </div>
+        </div>
+        <div nz-col nzSpan="8">
+          <div nz-row [nzGutter]="[28, 28]">
+            <div
+              class="data-card"
+              nz-col
+              nzSpan="24"
+              (click)="openGeneralVisionModal()"
+            >
+              <app-data-card
+                title="FATURADO"
+                color="#208345"
+                icon="dollar"
+                [value]="salesIndicators.totais.total_fat_total || 0"
+                [isCurrency]="true"
+              ></app-data-card>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div nz-row [nzGutter]="[28, 28]">
+        <div
+          class="data-card"
+          nz-col
+          nzSpan="8"
+          (click)="openGeneralVisionModal()"
+        >
+          <app-data-card
+            title="CONTATOS"
+            color="#16aaff"
+            icon="contacts"
+            [value]="salesIndicators.totais.total_qtd_tot_contato || 0"
+          ></app-data-card>
+        </div>
+        <div
+          class="data-card"
+          nz-col
+          nzSpan="8"
+          (click)="openGeneralVisionModal()"
+        >
+          <app-data-card
+            title="CONTATOS ERP"
+            color="#16aaff"
+            icon="contacts"
+            [value]="salesIndicators.totais.total_qtd_contato_erp || 0"
+            [percentage]="salesIndicators.totais.total_qtd_contato_erp_per || 0"
+          ></app-data-card>
+        </div>
+        <div
+          class="data-card"
+          nz-col
+          nzSpan="8"
+          (click)="openGeneralVisionModal()"
+        >
+          <app-data-card
+            title="CONTATOS CONVERTIDOS"
+            color="#16aaff"
+            icon="contacts"
+            [value]="salesIndicators.totais.total_qtd_contato_convertido || 0"
+            [percentage]="
+              salesIndicators.totais.total_qtd_contato_convertido_per || 0
+            "
+          ></app-data-card>
+        </div>
+      </div>
+
+      <div class="sellers-data" nz-row [nzGutter]="[28, 28]">
+        @for (seller of salesIndicators.vendedores; track $index) {
+          <app-seller-card
+            nz-col
+            nzSpan="8"
+            [seller]="seller"
+          ></app-seller-card>
+        }
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer" nz-row nzJustify="space-between" nzAlign="middle">
+        <div class="period" nz-col nzSpan="auto">
+          {{ translatedPeriod }}
+        </div>
+        <div nz-col nzSpan="auto">
+          <button
+            #dropDownTrigger
+            nz-button
+            nzType="primary"
+            nz-dropdown
+            [nzDropdownMenu]="filterDropdown"
+            nzPlacement="topLeft"
+            nzTrigger="click"
+            [nzClickHide]="dropdownHideOnClick"
+          >
+            <span nz-icon nzType="filter"></span>
+          </button>
+        </div>
+      </div>
+
+      <nz-dropdown-menu #filterDropdown="nzDropdownMenu">
+        <ul class="filter-items" nz-menu>
+          <li nz-menu-item>
+            <div (click)="$event.stopPropagation()">
+              <form nz-form nzLayout="vertical">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24" nzFor="company"
+                    >Empresas</nz-form-label
+                  >
+                  <nz-form-control [nzSpan]="24">
+                    <nz-select
+                      id="company"
+                      name="company"
+                      nzMode="multiple"
+                      nzPlaceHolder="Selecione"
+                      (ngModelChange)="onOrganizationChange($event)"
+                      [ngModel]="currentOrganizations"
+                      nzShowArrow
+                    >
+                      @for (org of organizations; track $index) {
+                        <nz-option
+                          [nzLabel]="org.description"
+                          [nzValue]="org.id"
+                        ></nz-option>
+                      }
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </form>
+            </div>
+          </li>
+          <div nz-menu-divider></div>
+          <li
+            nz-menu-item
+            [nzSelected]="period === salesIndicatorPeriod.CUSTOM"
+            (click)="onPeriodChange(salesIndicatorPeriod.CUSTOM)"
+          >
+            Período
+          </li>
+          <div nz-menu-divider></div>
+          <li
+            nz-menu-item
+            [nzSelected]="period === salesIndicatorPeriod.LAST_YEAR"
+            (click)="onPeriodChange(salesIndicatorPeriod.LAST_YEAR)"
+          >
+            Ano anterior
+          </li>
+          <li
+            nz-menu-item
+            [nzSelected]="period === salesIndicatorPeriod.THIS_YEAR"
+            (click)="onPeriodChange(salesIndicatorPeriod.THIS_YEAR)"
+          >
+            Ano atual
+          </li>
+          <div nz-menu-divider></div>
+          <li
+            nz-menu-item
+            [nzSelected]="period === salesIndicatorPeriod.PREVIOUS_MONTH"
+            (click)="onPeriodChange(salesIndicatorPeriod.PREVIOUS_MONTH)"
+          >
+            Mês anterior
+          </li>
+          <li
+            nz-menu-item
+            [nzSelected]="period === salesIndicatorPeriod.CURRENT_MONTH"
+            (click)="onPeriodChange(salesIndicatorPeriod.CURRENT_MONTH)"
+          >
+            Mês atual
+          </li>
+          <div nz-menu-divider></div>
+          <li
+            nz-menu-item
+            [nzSelected]="period === salesIndicatorPeriod.TODAY"
+            (click)="onPeriodChange(salesIndicatorPeriod.TODAY)"
+          >
+            Hoje
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+    </footer>
+  }
+</section>

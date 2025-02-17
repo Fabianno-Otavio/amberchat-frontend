@@ -1,0 +1,73 @@
+@if (panelInfo && channelGroups) {
+  <section>
+    <nz-table
+      [nzScroll]="{ x: '100%', y: '40dvh' }"
+      [nzWidthConfig]="['30%', '35%', '35%']"
+      [nzPageSize]="100"
+      [nzData]="panelInfo.users"
+      nzHideOnSinglePage
+      nzTableLayout="fixed"
+    >
+      <thead>
+        <tr>
+          <th>Nome Vendedor</th>
+          <th>Permissão Canais</th>
+          <th>Permissão Organizações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of panelInfo.users; track $index) {
+          <tr>
+            <td>
+              {{ user.name }}
+            </td>
+            <td>
+              <form [formGroup]="form">
+                <div [formGroupName]="user.id">
+                  <nz-select
+                    formControlName="listChannelsAllowed"
+                    nzMode="multiple"
+                    nzShowArrow="true"
+                  >
+                    @for (org of channelGroups[user.id]; track $index) {
+                      <nz-option-group [nzLabel]="org.organization">
+                        @for (item of org.channels; track $index) {
+                          <nz-option
+                            [nzLabel]="item.nome_canal"
+                            [nzValue]="item.token"
+                            [nzDisabled]="org.disabled"
+                          ></nz-option>
+                        }
+                      </nz-option-group>
+                    }
+                  </nz-select>
+                </div>
+              </form>
+            </td>
+            <td>
+              <form [formGroup]="form">
+                <div [formGroupName]="user.id">
+                  <nz-select
+                    formControlName="listOrganizationsAllowed"
+                    nzMode="multiple"
+                    nzShowArrow="true"
+                  >
+                    @for (item of panelInfo.organization; track $index) {
+                      <nz-option
+                        [nzLabel]="item.description"
+                        [nzValue]="item.id"
+
+                      ></nz-option>
+                    }
+                  </nz-select>
+                </div>
+              </form>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+  </section>
+} @else {
+  <app-loading></app-loading>
+}

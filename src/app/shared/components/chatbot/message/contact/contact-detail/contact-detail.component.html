@@ -1,0 +1,25 @@
+<div class="contact-detail">
+  @for (item of contact; track $index) {
+    <div nz-row nzAlign="middle" nzGutter="12">
+      <img nz-col nzSpan="auto" [src]="contact[0].linkImage" />
+      <p nz-col nzSpan="auto">{{ contact[0].disyplayName }}</p>
+    </div>
+
+    <div class="numbers">
+      @for (number of item.numbers; track $index) {
+        <div class="number">
+          <p>+{{ number.ddi.dddCode }} {{ number.number }}</p>
+          <span>{{ number.tag }}</span>
+        </div>
+
+        @if ($index !== item.numbers.length - 1) {
+          <nz-divider></nz-divider>
+        }
+      }
+    </div>
+
+    @if ($index !== contact.length - 1) {
+      <nz-divider></nz-divider>
+    }
+  }
+</div>

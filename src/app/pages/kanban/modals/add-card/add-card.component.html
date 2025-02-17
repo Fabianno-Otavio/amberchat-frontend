@@ -1,0 +1,633 @@
+@if (!loading) {
+  <section>
+    <nz-tabset>
+      <nz-tab nzTitle="Geral">
+        <div nz-row [nzGutter]="16">
+          <div class="left-side" nz-col [nzSpan]="isEditing ? 16 : 24">
+            <form nz-form [formGroup]="form" nzLayout="vertical">
+              <nz-form-item>
+                <nz-form-label nzFor="title" nzRequired>Título</nz-form-label>
+                <nz-form-control nzErrorTip="Título é obrigatório">
+                  <input
+                    nz-input
+                    name="title"
+                    type="text"
+                    id="title"
+                    formControlName="name"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-row nzAlign="bottom">
+                <nz-form-item nz-col nzSpan="auto">
+                  <nz-form-label
+                    nzRequired
+                    nzFor="responsibles"
+                    style="width: 100%"
+                    >Prazo
+                    @if (form.get("time")?.value) {
+                      <button
+                        class="reminder-button"
+                        nz-button
+                        nzType="text"
+                        (click)="
+                          $event.stopPropagation();
+                          openAddReminderModal(cardData, true)
+                        "
+                        nz-tooltip
+                        nzTooltipTitle="Adicionar lembretes"
+                      >
+                        <nz-badge
+                          nzSize="small"
+                          [nzCount]="cardData?.list_reminder?.length || reminders.length"
+                        >
+                          <span
+                            nz-icon
+                            nzType="bell"
+                            [nzTheme]="
+                              cardData?.list_reminder?.length || reminders.length || 0 > 0
+                                ? 'fill'
+                                : 'outline'
+                            "
+                          ></span>
+                        </nz-badge>
+                      </button>
+                    }
+                  </nz-form-label>
+                  <nz-form-control nzErrorTip="Prazo é obrigatório">
+                    <nz-date-picker
+                      [nzShowTime]="{ nzFormat: 'dd/MM/YYYY HH:mm' }"
+                      nzFormat="dd/MM/YYYY HH:mm"
+                      formControlName="time"
+                    ></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item nz-col nzSpan="auto">
+                  <nz-form-control>
+                    <nz-flex [nzGap]="8">
+                      <p>Data marcada</p>
+                      <nz-switch formControlName="isDeadline"></nz-switch>
+                      <p>Data limite</p>
+                    </nz-flex>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-row>
+
+              <nz-form-item>
+                <div
+                  nz-row
+                  nzAlign="bottom"
+                  style="width: 100%"
+                  nzJustify="space-between"
+                >
+                  <div nz-col nzSpan="22">
+                    <nz-form-label nzFor="tags">Tags</nz-form-label>
+                    <nz-form-control>
+                      <nz-select
+                        name="tags"
+                        nzMode="multiple"
+                        id="tags"
+                        formControlName="tags"
+                        nzPlaceHolder="Selecione as tags para adicionar ao card"
+                        nzShowArrow
+                        (nzOpenChange)="$event ? null : setTags()"
+                      >
+                        @for (tag of tags; track $index) {
+                          <nz-option
+                            [nzValue]="tag.id"
+                            [nzLabel]="tag.nome"
+                            nzCustomContent
+                          >
+                            <nz-flex nzJustify="space-between">
+                              {{ tag.nome }}
+                              <nz-flex [nzGap]="4">
+                                <button
+                                  nz-button
+                                  nzType="text"
+                                  (click)="
+                                    $event.stopPropagation();
+                                    openCreateTagModal(tag)
+                                  "
+                                  nz-tooltip
+                                  nzTooltipTitle="Editar tag"
+                                >
+                                  <span nz-icon nzType="edit"></span>
+                                </button>
+
+                                <button
+                                  nz-popconfirm
+                                  nzPopconfirmTitle="Tem certeza que quer deletar este funil?"
+                                  (click)="$event.stopPropagation()"
+                                  nzOkText="Deletar"
+                                  nzOkType="danger"
+                                  nzPopconfirmPlacement="rightTop"
+                                  nz-button
+                                  nzType="text"
+                                  (nzOnConfirm)="deleteTag(tag)"
+                                  nz-tooltip
+                                  nzTooltipTitle="Deletar tag"
+                                >
+                                  <span nz-icon nzType="delete"></span>
+                                </button>
+                              </nz-flex>
+                            </nz-flex>
+                          </nz-option>
+                        }
+                      </nz-select>
+                    </nz-form-control>
+                  </div>
+                  <div nz-col nzSpan="auto">
+                    <button
+                      nz-button
+                      (click)="openCreateTagModal()"
+                      nz-tooltip
+                      nzTooltipTitle="Criar tag"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <nz-flex
+                    nzJustify="start"
+                    style="margin: 4px 0; max-width: 100%; overflow-x: auto"
+                  >
+                    @for (tag of selectedTags; track $index) {
+                      <nz-tag [nzColor]="tag.rgb" style="height: fit-content">
+                        <nz-flex nzAlign="center" [nzGap]="4">
+                          {{ tag.nome }}
+                          <button
+                            nz-popconfirm
+                            nzPopconfirmTitle="Tem certeza que quer remover esta tag do card?"
+                            (click)="$event.stopPropagation()"
+                            nzOkText="Remover"
+                            nzOkType="danger"
+                            nzPopconfirmPlacement="rightTop"
+                            nz-button
+                            nzType="text"
+                            (nzOnConfirm)="removeTag(tag)"
+                            nz-tooltip
+                            nzTooltipTitle="Remover tag do card"
+                            style="height: fit-content; width: fit-content"
+                          >
+                            <span
+                              nz-icon
+                              nzType="close"
+                              style="font-size: 10px; width: 10px"
+                            ></span>
+                          </button>
+                        </nz-flex>
+                      </nz-tag>
+                    }
+                  </nz-flex>
+                </div>
+              </nz-form-item>
+
+              @if (isEditing) {
+                <nz-form-item>
+                  <nz-form-label nzFor="step" nzRequired
+                    >Etapa atual</nz-form-label
+                  >
+                  <nz-form-control nzErrorTip="Etapa é obrigatório">
+                    <nz-select
+                      name="step"
+                      id="step"
+                      formControlName="step"
+                      (ngModelChange)="onStepSelect($event)"
+                    >
+                      @for (step of data.steps; track $index) {
+                        <nz-option
+                          [nzValue]="step.id"
+                          [nzLabel]="step.nome"
+                        ></nz-option>
+                      }
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              }
+
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="responsibles"
+                  >Responsáveis</nz-form-label
+                >
+                <nz-form-control>
+                  <nz-select
+                    name="responsibles"
+                    nzMode="tags"
+                    id="responsibles"
+                    formControlName="responsibles"
+                    nzAllowClear
+                    nzShowArrow
+                  >
+                    @for (user of data.users; track $index) {
+                      <nz-option
+                        [nzLabel]="user.nome"
+                        [nzValue]="user.id"
+                        nzCustomContent
+                      >
+                        <nz-flex [nzGap]="8" nzAlign="center">
+                          @if (user.url_img !== "") {
+                            <img
+                              class="select-image"
+                              [src]="user?.url_img"
+                              width="40"
+                              onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                            />
+                          } @else {
+                            <div class="initials-avatar">
+                              {{ getFirstLetters(user.nome) }}
+                            </div>
+                          }
+                          <div>
+                            {{ user.nome }}
+                          </div>
+                        </nz-flex>
+                      </nz-option>
+                    }
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label style="width: 100%" class="full-width-label">
+                  <nz-flex
+                    style="width: 100%"
+                    nzJustify="space-between"
+                    nzAlign="center"
+                  >
+                    Contatos
+                    <button
+                      nz-button
+                      (click)="openAddContactModal()"
+                      nz-tooltip
+                      nzTooltipTitle="Adicionar contato"
+                    >
+                      + Adicionar Contato
+                    </button>
+                  </nz-flex>
+                </nz-form-label>
+
+                <nz-flex [nzGap]="8" class="contacts-list">
+                  @for (contact of cardData?.list_contatos; track $index) {
+                    <nz-card style="background-color: #fafefb">
+                      <nz-flex nzJustify="space-between">
+                        <nz-flex [nzGap]="8" nzAlign="center">
+                          <img
+                            class="select-image"
+                            [src]="contact.linkImage"
+                            width="40"
+                            onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                          />
+                          <nz-flex nzVertical>
+                            <div [nz-tooltip]="getDisplayName(contact)">
+                              {{
+                                getDisplayName(contact) | nzEllipsis: 25 : "..."
+                              }}
+                            </div>
+                            <div>
+                              {{ formatPhoneNumber(contact.number) }}
+                            </div>
+                          </nz-flex>
+                        </nz-flex>
+
+                        <button
+                          nz-popconfirm
+                          nzPopconfirmTitle="Tem certeza que quer remover este contato do card?"
+                          (click)="$event.stopPropagation()"
+                          nzOkText="Remover"
+                          nzOkType="danger"
+                          nzPopconfirmPlacement="rightTop"
+                          nz-button
+                          nzType="text"
+                          nz-tooltip
+                          nzTooltipTitle="Remover contato do card"
+                          (nzOnConfirm)="removeContact(contact)"
+                        >
+                          <span nz-icon nzType="delete"></span>
+                        </button>
+                      </nz-flex>
+                    </nz-card>
+                  }
+                </nz-flex>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label style="width: 100%" class="full-width-label">
+                  <nz-flex
+                    style="width: 100%"
+                    nzJustify="space-between"
+                    nzAlign="center"
+                  >
+                    <nz-flex nzVertical>
+                      Produtos
+                      @if (getProductValueSum() > 0) {
+                        <small>
+                          <b>
+                            Total: R${{
+                              getProductValueSum() | number: "1.2-2" : "pt"
+                            }}
+                          </b>
+                        </small>
+                      }
+                    </nz-flex>
+                    <button
+                      nz-button
+                      (click)="openAddProductModal()"
+                      nz-tooltip
+                      nzTooltipTitle="Adicionar produto"
+                    >
+                      + Adicionar Produto
+                    </button>
+                  </nz-flex>
+                </nz-form-label>
+
+                <nz-flex [nzGap]="8" class="product-relation-list">
+                  @for (product of selectedProducts; track $index) {
+                    <nz-card
+                      (click)="openAddProductModal(product)"
+                      style="background-color: #fafefb"
+                    >
+                      <nz-flex nzJustify="space-between">
+                        <nz-typography
+                          nzEllipsis
+                          nzEllipsisRows="1"
+                          [nz-tooltip]="product.nome"
+                        >
+                          {{ product.nome }} <br />
+                          <small
+                            >R${{
+                              product.valor | number: "1.2-2" : "pt"
+                            }}</small
+                          >
+                        </nz-typography>
+
+                        <button
+                          nz-popconfirm
+                          nzPopconfirmTitle="Tem certeza que quer remover este produto do card?"
+                          (click)="$event.stopPropagation()"
+                          nzOkText="Remover"
+                          nzOkType="danger"
+                          nzPopconfirmPlacement="rightTop"
+                          nz-button
+                          nzType="text"
+                          (nzOnConfirm)="deleteRelation(product)"
+                          nz-tooltip
+                          nzTooltipTitle="Remover produto do card"
+                        >
+                          <span nz-icon nzType="delete"></span>
+                        </button>
+                      </nz-flex>
+
+                      <nz-divider></nz-divider>
+                      <p [nz-tooltip]="product.obs">
+                        {{
+                          product.obs || "Sem descrição"
+                            | nzEllipsis: 50 : "..."
+                        }}
+                      </p>
+                    </nz-card>
+                  }
+                </nz-flex>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label nzFor="obs">Observações</nz-form-label>
+                <nz-form-control>
+                  <nz-textarea-count [nzMaxCharacterCount]="100">
+                    <textarea
+                      id="obs"
+                      rows="4"
+                      nz-input
+                      formControlName="obs"
+                    ></textarea>
+                  </nz-textarea-count>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
+          </div>
+
+          @if (isEditing) {
+            <div class="activities" nz-col nzSpan="8">
+              <nz-flex nzVertical nzJustify="space-between">
+                <div>
+                  <h4>Notas</h4>
+
+                  <nz-flex
+                    #notesContainer
+                    class="activities-cards"
+                    nzVertical
+                    nzGap="small"
+                  >
+                    @for (note of notes; track $index) {
+                      <nz-card>
+                        <nz-flex
+                          nzAlign="center"
+                          [nzGap]="8"
+                          class="user"
+                          style="height: fit-content"
+                        >
+                          @if (note.user.url_img !== "") {
+                            <img
+                              class="select-image"
+                              [src]="note.user?.url_img"
+                              width="40"
+                              onerror="this.src='https://axy7gbdyolcg.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/media01/avatar-default-icon.png'"
+                            />
+                          } @else {
+                            <div class="initials-avatar">
+                              {{ getFirstLetters(note.user.nome) }}
+                            </div>
+                          }
+                          <nz-flex nzVertical>
+                            <p>{{ note.user?.nome || "" }}</p>
+                            <small>{{
+                              note.created_at | date: "dd/MM/YYYY HH:mm"
+                            }}</small>
+                          </nz-flex>
+                        </nz-flex>
+                        <nz-divider></nz-divider>
+                        <p>{{ note.texto }}</p>
+                      </nz-card>
+                    }
+                  </nz-flex>
+                </div>
+                <form [formGroup]="noteForm">
+                  <div class="description">
+                    <nz-form-item>
+                      <nz-form-control>
+                        <nz-input-group [nzSuffix]="noteSendButton">
+                          <textarea
+                            [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+                            nz-input
+                            formControlName="text"
+                            style="resize: none"
+                          ></textarea>
+                        </nz-input-group>
+                        <ng-template #noteSendButton>
+                          <span
+                            nz-icon
+                            nzType="send"
+                            (click)="addNote()"
+                            style="cursor: pointer"
+                          ></span>
+                        </ng-template>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </form>
+              </nz-flex>
+            </div>
+          }
+        </div>
+      </nz-tab>
+      @if (isEditing) {
+        <nz-tab nzTitle="Tarefas">
+          <div style="padding: 8px; height: 65dvh">
+            <nz-flex nzJustify="end">
+              <button
+                nz-button
+                nzType="primary"
+                style="margin-bottom: 8px"
+                (click)="openTaskModal()"
+                nz-tooltip
+                nzTooltipTitle="Adicionar tarefa"
+              >
+                + Adicionar Tarefa
+              </button>
+            </nz-flex>
+            <nz-table
+              #tasksTable
+              [nzWidthConfig]="['25%', '20%', '40%', '15%']"
+              [nzData]="tasks"
+              nzHideOnSinglePage
+            >
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Data</th>
+                  <th>Descrição</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (task of tasksTable.data; track $index) {
+                  <tr [ngClass]="{ 'task-finished': task.is_concluida }">
+                    <td>{{ task.nome }}</td>
+                    <td>
+                      {{ task?.is_prazo_marcado ? "Até " : ""
+                      }}{{ task.prazo | date: "dd/MM/YYYY HH:mm" }}
+                    </td>
+                    <td>{{ task.texto }}</td>
+                    <td>
+                      <nz-flex [nzGap]="4">
+                        <button
+                          nz-button
+                          nzType="text"
+                          (click)="
+                            $event.stopPropagation(); openTaskModal(task)
+                          "
+                          nz-tooltip
+                          nzTooltipTitle="Editar tarefa"
+                        >
+                          <span nz-icon nzType="edit"></span>
+                        </button>
+
+                        <button
+                          nz-popconfirm
+                          nzPopconfirmTitle="Tem certeza que quer deletar esta tarefa?"
+                          (click)="$event.stopPropagation()"
+                          nzOkText="Deletar"
+                          nzOkType="danger"
+                          nzPopconfirmPlacement="rightTop"
+                          nz-button
+                          nzType="text"
+                          (nzOnConfirm)="deleteTask(task.id)"
+                          nz-tooltip
+                          nzTooltipTitle="Deletar tarefa"
+                        >
+                          <span nz-icon nzType="delete"></span>
+                        </button>
+
+                        <button
+                          class="finish-task-button"
+                          nz-popconfirm
+                          [nzPopconfirmTitle]="
+                            'Tem certeza que quer marcar esta tarefa como ' +
+                            (task?.is_concluida ? 'não ' : '') +
+                            'concluída?'
+                          "
+                          (click)="$event.stopPropagation()"
+                          (nzOnConfirm)="
+                            markTaskCompletion(task, !task.is_concluida)
+                          "
+                          nz-button
+                          nzType="text"
+                          nz-tooltip
+                          [nzTooltipTitle]="
+                            task?.is_concluida
+                              ? 'Marcar tarefa como não concluída'
+                              : 'Concluir tarefa'
+                          "
+                        >
+                          @if (task?.is_concluida) {
+                            <span nz-icon nzType="check-circle"></span>
+                          } @else {
+                            <div></div>
+                          }
+                        </button>
+
+                        @if (
+                          !task?.is_concluida &&
+                          getTimeDiffFromNow(task.prazo) > 0
+                        ) {
+                          <button
+                            class="reminder-button"
+                            nz-button
+                            nzType="text"
+                            (click)="
+                              $event.stopPropagation();
+                              openAddReminderModal(task)
+                            "
+                            nz-tooltip
+                            nzTooltipTitle="Adicionar lembretes"
+                          >
+                            <nz-badge
+                              nzSize="small"
+                              [nzCount]="getReminderFromTask(task).length"
+                            >
+                              <span
+                                nz-icon
+                                nzType="bell"
+                                [nzTheme]="
+                                  getReminderFromTask(task).length > 0
+                                    ? 'fill'
+                                    : 'outline'
+                                "
+                              ></span>
+                            </nz-badge>
+                          </button>
+                        }
+                      </nz-flex>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </nz-table>
+          </div>
+        </nz-tab>
+      }
+    </nz-tabset>
+  </section>
+} @else {
+  <app-loading></app-loading>
+}
+
+<nz-divider style="width: 100%"></nz-divider>
+<button
+  nz-button
+  nzType="primary"
+  style="position: absolute; bottom: 10px; right: 16px"
+  (click)="sendForm()"
+  [disabled]="form ? form.invalid : true"
+>
+  Ok
+</button>

@@ -1,0 +1,100 @@
+.sales-indicator-page {
+  background-color: #f1f4f6;
+  height: 100%;
+
+  .header {
+    height: 90px;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+
+    padding: 16px;
+    background: rgb(240, 248, 255);
+    border-bottom: 2px solid rgba(167, 167, 167, 0.3);
+
+    p,
+    h2 {
+      color: rgb(73, 80, 87);
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .icon-wrapper {
+      height: 100%;
+      aspect-ratio: 1;
+      background-color: #fff;
+      margin-right: 32px;
+
+      display: grid;
+      place-items: center;
+      box-shadow: 2px 2px 4px rgba(167, 167, 167, 0.5);
+
+      span {
+        font-size: 24px;
+      }
+    }
+  }
+
+  main {
+    padding: 16px;
+    margin-top: 90px;
+    padding-bottom: 96px;
+
+    .sellers-data {
+      margin-top: 16px !important;
+    }
+  }
+
+  app-data-card {
+    pointer-events: none;
+  }
+
+  .data-card {
+    cursor: pointer;
+  }
+
+  .footer {
+    height: 80px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+
+    background-color: #f1f4f6;
+
+    padding: 0 24px;
+
+    button {
+      height: 50px;
+      width: 50px;
+
+      background: #208345;
+      border-color: #208345;
+      span {
+        font-size: 32px;
+      }
+    }
+
+    .period {
+      font-size: 18px;
+      font-weight: bold;
+      color: #16aaff;
+    }
+  }
+}
+
+.filter-items {
+  li {
+    width: 300px;
+
+    ::ng-deep .ant-menu-title-content {
+      width: 100%;
+    }
+
+    form {
+      nz-select {
+        width: 100%;
+      }
+    }
+  }
+}
